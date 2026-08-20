@@ -18,9 +18,15 @@ async function getPyodide(): Promise<unknown> {
   pyodideLoadingPromise = (async () => {
     const { loadPyodide } = await import('pyodide');
     const pyodide = await loadPyodide({
-      indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/',
+      indexURL: 'https://cdn.jsdelivr.net/pyodide/v314.0.5/full/',
     });
-    await pyodide.loadPackage(['numpy', 'matplotlib']);
+    for (const pkg of ['numpy', 'matplotlib', 'pandas', 'scipy', 'scikit-learn']) {
+      try {
+        await pyodide.loadPackage(pkg);
+      } catch (e) {
+        console.warn(`[Pyodide] No se pudo cargar ${pkg}:`, e);
+      }
+    }
     pyodideInstance = pyodide;
     return pyodide;
   })();
@@ -28,93 +34,104 @@ async function getPyodide(): Promise<unknown> {
   return pyodideLoadingPromise;
 }
 
+function toBase64(str: string): string {
+  const bytes = new TextEncoder().encode(str);
+  const binary = Array.from(bytes, (b) => String.fromCharCode(b)).join('');
+  return btoa(binary);
+}
+
 export async function runPythonCode(code: string, timeoutMs = 30000): Promise<PythonRunResult> {
   const startTime = performance.now();
-  let stdout = '';
-  let stderr = '';
-  let svgOutput: string | null = null;
 
   try {
     const pyodide = await getPyodide() as {
       runPythonAsync: (code: string) => Promise<unknown>;
-      globals: { get: (name: string) => (...args: unknown[]) => string };
+      globals: { set: (name: string, value: unknown) => void; get: (name: string) => unknown };
     };
 
-    pyodide.runPythonAsync(`
-import sys, io
-_sys_stdout = sys.stdout
-_sys_stderr = sys.stderr
-sys.stdout = io.StringIO()
-sys.stderr = io.StringIO()
-`);
+    const encoded = toBase64(code);
+    pyodide.globals.set('__user_code_b64', encoded);
 
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Tiempo de ejecución agotado')), timeoutMs);
-    });
+    const runnerCode = `
+import sys as _sys, io as _io, traceback as _tb, base64 as _b64
 
-    const execPromise = pyodide.runPythonAsync(`
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import numpy as np
+_orig_out = _sys.stdout
+_orig_err = _sys.stderr
+_buf_out = _io.StringIO()
+_buf_err = _io.StringIO()
+_sys.stdout = _buf_out
+_sys.stderr = _buf_err
 
-${code}
+_svg = ''
+_error_msg = ''
 
-# Try to capture matplotlib figure
-import sys
-_buf = sys.stdout.getvalue() if hasattr(sys.stdout, 'getvalue') else ''
-_err = sys.stderr.getvalue() if hasattr(sys.stderr, 'getvalue') else ''
-
-# Check for SVG output
-_fig_out = ''
 try:
+    _decoded = _b64.b64decode(__user_code_b64).decode('utf-8')
+
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    exec(_decoded)
+
     if plt.get_fignums():
-        import io
-        buf = io.BytesIO()
-        plt.savefig(buf, format='svg', bbox_inches='tight', dpi=100)
-        buf.seek(0)
-        _fig_out = buf.read().decode('utf-8')
+        import io as _io2
+        _buf = _io2.BytesIO()
+        plt.savefig(_buf, format='svg', bbox_inches='tight', dpi=100)
+        _buf.seek(0)
+        _svg = _buf.read().decode('utf-8')
         plt.close('all')
-except Exception:
-    pass
+except:
+    _error_msg = _tb.format_exc()
 
-sys.stdout = _sys_stdout
-sys.stderr = _sys_stderr
-print("STDOUT_DELIM" + _buf)
-print("STDERR_DELIM" + _err)
-if _fig_out:
-    print("SVG_DELIM" + _fig_out)
-`);
+_sys.stdout = _orig_out
+_sys.stderr = _orig_err
 
-    await Promise.race([execPromise, timeoutPromise]);
+_py_result_stdout = _buf_out.getvalue()
+_py_result_stderr = _buf_err.getvalue()
+_py_result_svg = _svg
+_py_result_error = _error_msg
+`;
 
-    const output = String(pyodide.globals.get('_') || '');
+    await pyodide.runPythonAsync(runnerCode);
 
-    const stdoutMatch = output.match(/STDOUT_DELIM([\s\S]*?)(?=STDERR_DELIM|$)/);
-    const stderrMatch = output.match(/STDERR_DELIM([\s\S]*?)(?=SVG_DELIM|$)/);
-    const svgMatch = output.match(/SVG_DELIM([\s\S]*?)$/);
+    const stdout = String(pyodide.globals.get('_py_result_stdout') || '');
+    const stderr = String(pyodide.globals.get('_py_result_stderr') || '');
+    const svgOutput = String(pyodide.globals.get('_py_result_svg') || '').trim() || null;
+    const pythonError = String(pyodide.globals.get('_py_result_error') || '').trim();
 
-    stdout = stdoutMatch?.[1]?.trim() || '';
-    stderr = stderrMatch?.[1]?.trim() || '';
-    svgOutput = svgMatch?.[1]?.trim() || null;
+    for (const k of ['__user_code_b64', '_py_result_stdout', '_py_result_stderr', '_py_result_svg', '_py_result_error']) {
+      try { pyodide.globals.set(k, undefined); } catch { /* ok */ }
+    }
+
+    const errorMsg = pythonError || (stderr.trim().length > 0 ? stderr.trim() : null);
 
     return {
-      stdout,
-      stderr,
+      stdout: stdout.trim(),
+      stderr: stderr.trim(),
       svgOutput,
-      result: stdout,
-      error: stderr || null,
+      result: stdout.trim(),
+      error: errorMsg,
       duration: Math.round(performance.now() - startTime),
-      success: true,
+      success: !errorMsg,
     };
-  } catch (err) {
+  } catch (err: unknown) {
+    let msg: string;
+    if (err instanceof Error) {
+      msg = err.message || String(err);
+    } else if (typeof err === 'string') {
+      msg = err;
+    } else {
+      msg = String(err) || 'Error desconocido';
+    }
+    console.error('[PythonRunner]', msg);
     return {
-      stdout,
-      stderr,
-      svgOutput,
+      stdout: '',
+      stderr: '',
+      svgOutput: null,
       result: null,
-      error: err instanceof Error ? err.message : 'Error desconocido',
+      error: msg,
       duration: Math.round(performance.now() - startTime),
       success: false,
     };

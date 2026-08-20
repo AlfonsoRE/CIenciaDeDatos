@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { FlaskConical, Code, BarChart3, Database, TrendingUp, Brain } from 'lucide-react';
@@ -30,6 +31,8 @@ const PRACTICES = [
 ];
 
 export function PracticeLab() {
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       <div>
@@ -58,7 +61,9 @@ export function PracticeLab() {
                   <Badge variant={practice.language === 'both' ? 'info' : practice.language === 'python' ? 'success' : 'warning'}>
                     {practice.language === 'both' ? 'Python/R' : practice.language === 'python' ? 'Python' : 'R'}
                   </Badge>
-                  <Button size="sm" variant="secondary">Iniciar</Button>
+                  <Button size="sm" variant="secondary" onClick={() => navigate(`/laboratorio/${practice.id}`)}>
+                    Iniciar
+                  </Button>
                 </div>
               </Card>
             ))}

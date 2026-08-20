@@ -6,6 +6,7 @@ import { CourseMap } from '@/features/course/CourseMap';
 import { UnitView } from '@/features/course/UnitView';
 import { LessonPlayer } from '@/features/lessons/LessonPlayer';
 import { PracticeLab } from '@/features/practices/PracticeLab';
+import { PracticePlayer } from '@/features/practices/PracticePlayer';
 import { ProgressView } from '@/features/progress/ProgressView';
 import { EvidencePortfolio } from '@/features/portfolio/EvidencePortfolio';
 import { SettingsPage } from '@/features/settings/SettingsPage';
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="curso" element={<CourseMap />} />
           <Route path="curso/unidad/:unitNumber" element={<UnitView />} />
           <Route path="laboratorio" element={<PracticeLab />} />
+          <Route path="laboratorio/:practiceId" element={<PracticePlayer />} />
           <Route path="progreso" element={<ProgressView />} />
           <Route path="portafolio" element={<EvidencePortfolio />} />
           <Route path="configuracion" element={<SettingsPage />} />
