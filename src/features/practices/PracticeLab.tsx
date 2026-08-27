@@ -47,7 +47,7 @@ export function PracticeLab() {
           </h2>
           <div className="space-y-2">
             {PRACTICES.filter((p) => p.unit === unitNum).map((practice) => (
-              <Card key={practice.id} variant="elevated" padding="md" className="hover:border-primary/30 transition-all cursor-pointer">
+              <Card key={practice.id} variant="elevated" padding="md" className="hover:border-primary/30 transition-all cursor-pointer" onClick={() => navigate(`/laboratorio/${practice.id}`)}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                     <practice.icon size={20} className="text-primary" />
