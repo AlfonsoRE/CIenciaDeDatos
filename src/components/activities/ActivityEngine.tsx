@@ -106,7 +106,7 @@ export function ActivityEngine({ activities, onComplete }: ActivityEngineProps) 
         <h3 className="font-semibold text-text">{activity.title}</h3>
         <p className="text-sm text-text-secondary">{activity.question}</p>
 
-        {activity.options && (activity.type === 'multiple-choice' || activity.type === 'multiple-select') && (
+        {activity.options && (activity.type === 'multiple-choice' || activity.type === 'multiple-select' || activity.type === 'classification') && (
           <div className="space-y-2">
             {activity.options.map((option: ActivityOption) => {
               const isSelected = activity.type === 'multiple-select'
