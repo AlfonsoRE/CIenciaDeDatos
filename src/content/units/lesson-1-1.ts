@@ -157,6 +157,13 @@ print(f"\\nFASE 4 - Tasa de aprobación: {df['aprueba'].mean():.1%}")`,
 # Usa matplotlib para crear un diagrama de flujo o circular`,
     expectedApproach: 'matplotlib con flechas o diagrama circular.',
     evaluationCriteria: ['8 fases presentes', 'Entregables claros', 'Diseño profesional'],
+    hints: [
+      'Identifica las 8 fases del ciclo de vida antes de empezar a programar: definición, adquisición, limpieza, exploración, modelado, evaluación, implementación y mantenimiento',
+      'Usa matplotlib.pyplot para crear cajas o elipses representando cada fase, y conectalas con plt.annotate o plt.arrow',
+      'Para un diagrama circular, usa plt.Circle y ax.add_patch en un bucle que distribuya las fases en 360 grados',
+      'Incluye al menos 2 entregables por fase como texto dentro o al lado de cada caja (ej: "EDA Report", "Modelo entrenado")',
+      'Personaliza colores con plt.cm.Set3 y usa ax.set_aspect("equal") para que el diagrama se vea proporcional',
+    ],
   },
   assessment: {
     id: '1.1-assess',

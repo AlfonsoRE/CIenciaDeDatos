@@ -180,6 +180,13 @@ df = pd.DataFrame({
 # Usa al menos 4 tipos de gráfica diferentes.`,
     expectedApproach: 'Histograma + barplot + heatmap o lineplot + gráfico circular o barras.',
     evaluationCriteria: ['4+ gráficas diferentes', 'Insights claros', 'Buen diseño visual'],
+    hints: [
+      'Usa plt.figure(figsize=(12, 10)) y plt.subplot(2,2,1) para crear un dashboard con 4 gráficas en una figura',
+      'Gráfica 1: sns.countplot para distribución de satisfacción. Gráfica 2: sns.boxplot(x="departamento", y="satisfaccion")',
+      'Gráfica 3: sns.heatmap con pd.crosstab(antiguedad, satisfaccion) para ver relaciones. Gráfica 4: plt.pie para % que recomienda',
+      'Agrega títulos con plt.title(), etiquetas con plt.xlabel()/ylabel(), y usa plt.tight_layout() para que no se sobrepongan',
+      'Incluye insights textuales: print("Insight: IT tiene la mayor satisfacción promedio") al final del análisis',
+    ],
   },
   assessment: {
     id: '3.4-assess',

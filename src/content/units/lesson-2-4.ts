@@ -195,6 +195,13 @@ lam = 20
 # (c) Simulación`,
     expectedApproach: 'Usar 1-poison.cdf(25, lam) para (a), poisson.pmf(15, lam) para (b).',
     evaluationCriteria: ['Cálculos correctos', 'Uso apropiado de CDF/PMF', 'Comparación simulación vs teórica'],
+    hints: [
+      '(a) P(X > 25) = 1 - poisson.cdf(25, mu=20). Recuerda que CDF da P(X ≤ k)',
+      '(b) P(X = 15) usa la función de masa: poisson.pmf(15, mu=20). PMF da la probabilidad exacta',
+      '(c) Simula con np.random.poisson(20, size=1000) y calcula la proporción de veces > 25 y == 15',
+      'Compara los valores teóricos con los simulados: deberían ser cercanos con 1000 muestras',
+      'Usa f-strings para mostrar resultados lado a lado: print(f"Teórico: {teorico:.4f} | Simulado: {simulado:.4f}")',
+    ],
   },
   assessment: {
     id: '2.4-assess',

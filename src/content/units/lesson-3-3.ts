@@ -184,6 +184,13 @@ print(f"Dimensiones originales: {X.shape}")
 # 4. Visualiza en 2D con colores por clase`,
     expectedApproach: 'StandardScaler → PCA → RandomForestClassifier con cross_val_score.',
     evaluationCriteria: ['PCA correcto', 'Comparación de accuracy', 'Visualización clara'],
+    hints: [
+      'Primero estandariza: scaler = StandardScaler(); X_scaled = scaler.fit_transform(X) — PCA es sensible a la escala',
+      'Para mantener 95% de varianza: pca = PCA(n_components=0.95). El n_components puede ser un decimal entre 0 y 1',
+      'Compara accuracy con cross_val_score: RandomForestClassifier().fit(X, y) en datos originales y reducidos',
+      'Para visualizar 2D: usa PCA(n_components=2) y plt.scatter(X_pca[:,0], X_pca[:,1], c=y, cmap="viridis")',
+      'Revisa pca.explained_variance_ratio_ para ver cuánta varianza conserva cada componente principal',
+    ],
   },
   assessment: {
     id: '3.3-assess',

@@ -206,6 +206,13 @@ df = pd.DataFrame({
       'Código limpio y documentado',
       'Resultado verificable',
     ],
+    hints: [
+      'Identifica problemas con df.isnull().sum() para faltantes, y busca valores atípicos con df.describe() (edad=200 y presion=999 son sospechosos)',
+      'Para la edad faltante, justifica: imputar con la media/mediana es razonable para datos numéricos con pocos faltantes',
+      'Para presión=999: es un outlier claro (la presión normal es 80-180). Elimínalo o reemplázalo con la mediana',
+      'Usa df.drop_duplicates() para eliminar duplicados y df[(df["presion"] < 200)] para filtrar outliers',
+      'Documenta cada paso con comentarios: # Problema: edad=200 es imposible → Acción: eliminar fila',
+    ],
   },
   assessment: {
     id: '3.1-assess',

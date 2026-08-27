@@ -145,6 +145,13 @@ print(f"Recomendación: {'Aceptable' if completitud > 90 else 'Requiere limpieza
 # ¿Cuál elegirías y por qué?`,
     expectedApproach: 'Evaluación sistemática de completitud, outliers y tamaño.',
     evaluationCriteria: ['Criterios claros', 'Comparación justa', 'Decisión fundamentada'],
+    hints: [
+      'Define criterios de evaluación antes de comparar: completitud (% faltantes), integridad (outliers), tamaño (suficiente para análisis) y representatividad',
+      'Dataset C tiene 0% faltantes y solo 2% outliers, pero solo 500 filas. Dataset B tiene 5000 filas pero más problemas de calidad',
+      'Calcula el porcentaje efectivo de datos útiles: filas × (1 - %faltantes) × (1 - %outliers) para cada dataset',
+      'No existe un dataset perfecto: justifica tu elección balanceando calidad vs cantidad según el objetivo del análisis',
+      'Presenta una tabla comparativa con métricas numéricas: filas, faltantes, outliers, y un score ponderado final',
+    ],
   },
   assessment: {
     id: '1.6-assess',

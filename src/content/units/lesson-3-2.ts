@@ -193,6 +193,13 @@ df = pd.DataFrame({
 # 3. Aplique el transformador al dataframe`,
     expectedApproach: 'ColumnTransformer con pipelines para cada tipo de columna.',
     evaluationCriteria: ['Imputación correcta', 'Escalado apropiado', 'One-hot encoding válido'],
+    hints: [
+      'Crea un ColumnTransformer con sklearn.compose: aplica diferentes transformaciones a columnas numéricas y categóricas',
+      'Para numéricas: Pipeline con SimpleImputer(strategy="median") y StandardScaler o MinMaxScaler',
+      'Para categóricas: Pipeline con SimpleImputer(strategy="most_frequent") y OneHotEncoder(handle_unknown="ignore")',
+      'Usa make_column_selector de sklearn.compose para identificar automáticamente columnas numéricas y categóricas',
+      'Aplica fit_transform al dataframe y muestra el resultado con pd.DataFrame(transformed, columns=feature_names)',
+    ],
   },
   assessment: {
     id: '3.2-assess',

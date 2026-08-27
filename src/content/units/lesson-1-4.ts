@@ -192,6 +192,13 @@ print(f"  Unicidad: {(1 - duplicados/len(df))*100:.1f}%")`,
 # 5. Resume tus hallazgos principales`,
     expectedApproach: 'EDA sistemático: estructura → distribuciones → relaciones → calidad → conclusiones.',
     evaluationCriteria: ['Profundidad del análisis', 'Calidad de visualizaciones', 'Hallazgos relevantes'],
+    hints: [
+      'Empieza con df.info(), df.describe() y df.shape para entender la estructura del dataset antes de graficar',
+      'Crea al menos 4 tipos de gráfica: histograma (distribución), boxplot (outliers), scatterplot (relaciones), heatmap (correlaciones)',
+      'Usa seaborn para visualizaciones más atractivas: sns.heatmap(df.corr(), annot=True) para correlaciones',
+      'Detecta calidad de datos con df.isnull().sum() para faltantes y describe() para identificar valores atípicos',
+      'Termina con un resumen de hallazgos clave: ¿Qué variables son más relevantes? ¿Hay patrones o anomalías?',
+    ],
   },
   assessment: {
     id: '1.4-assess',

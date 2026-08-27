@@ -205,6 +205,13 @@ salarios = np.concatenate([
 # 6. Interpreta los resultados`,
     expectedApproach: 'Media >> Mediana por outliers. Sesgo positivo. Outliers en extremo superior.',
     evaluationCriteria: ['Cálculos correctos', 'Visualizaciones claras', 'Interpretación fundamentada'],
+    hints: [
+      'Calcula media, mediana y moda con numpy: np.mean(), np.median(), y from scipy.stats import mode para la moda',
+      'La varianza usa ddof=1 (muestreo): np.var(salarios, ddof=1). La DE es la raíz cuadrada: np.std(salarios, ddof=1)',
+      'El IQR es Q3 - Q1: Q1, Q3 = np.percentile(salarios, [25, 75]). Outliers por Tukey: fuera de [Q1-1.5*IQR, Q3+1.5*IQR]',
+      'Compara media vs mediana: si la media >> mediana, hay sesgo positivo (valores altos de ejecutivos)',
+      'Usa plt.subplot(1,2,1) para histograma y subplot(1,2,2) para boxplot en una sola figura con plt.tight_layout()',
+    ],
   },
   assessment: {
     id: '2.2-assess',

@@ -220,6 +220,13 @@ grupo_b = np.random.normal(130, 18, 45)
 # 4. Conclusión`,
     expectedApproach: 'ttest_ind para prueba t, Cohen\'s d para tamaño del efecto.',
     evaluationCriteria: ['Prueba t correcta', 'Interpretación del p-value', 'Cálculo de tamaño del efecto'],
+    hints: [
+      'Usa stats.ttest_ind(grupo_a, grupo_b) para la prueba t de dos muestras independientes',
+      'El p-value < 0.05 indica diferencia significativa: "Rechazamos H0: las medias son diferentes"',
+      'Para el IC de la diferencia de medias: media_diff = grupo_a.mean() - grupo_b.mean() y calcula el error estándar combinado',
+      "Cohen's d = (media_A - media_B) / std_pooled. Un valor > 0.8 es un efecto grande",
+      'Interpreta el tamaño del efecto junto con el p-value: un resultado significativo con efecto grande es más relevante clínicamente',
+    ],
   },
   assessment: {
     id: '2.5-assess',

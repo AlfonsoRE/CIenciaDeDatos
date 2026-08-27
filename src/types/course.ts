@@ -86,6 +86,7 @@ export interface Challenge {
   codeTemplate: string;
   expectedApproach: string;
   evaluationCriteria: string[];
+  hints?: string[];
 }
 
 export interface Assessment {

@@ -312,12 +312,22 @@ export function LessonPlayer() {
       {currentStage === 'challenge' && (
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-text flex items-center gap-2"><Zap size={20} className="text-primary" /> Reto individual</h2>
+          <Card padding="md" className="space-y-3">
+            <div>
+              <p className="text-sm font-medium text-text mb-1">Objetivo</p>
+              <p className="text-sm text-text-secondary">{lesson.challenge.description}</p>
+            </div>
+            <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+              <p className="text-xs font-medium text-primary mb-1">Enfoque sugerido</p>
+              <p className="text-xs text-text-secondary">{lesson.challenge.expectedApproach}</p>
+            </div>
+          </Card>
           <CodeLab
             title={lesson.challenge.title}
             objective={lesson.challenge.description}
             initialCode={lesson.challenge.codeTemplate}
             language={lesson.challenge.language === 'r' ? 'r' : 'python'}
-            hints={['Revisa los conceptos de la teoría', 'Desglosa el problema en pasos', 'Usa las librerías appropriate']}
+            hints={lesson.challenge.hints || ['Revisa la teoría de la lección', 'Desglosa el problema en pasos pequeños', 'Prueba tu código con datos de ejemplo']}
             onStepComplete={(ok) => { if (ok) handleHintUsed(); }}
           />
           <Card padding="md" className="border-l-4 border-l-primary">

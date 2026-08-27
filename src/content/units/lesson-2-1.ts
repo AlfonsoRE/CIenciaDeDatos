@@ -143,6 +143,13 @@ print(f"Mediana de monto: {ventas['monto'].median():,.2f} pesos")`,
 # 3. Qué tipo de análisis harías para cada una`,
     expectedApproach: 'Preguntas claras separadas en descriptivas e inferenciales.',
     evaluationCriteria: ['Preguntas relevantes', 'Correcta clasificación', 'Análisis viable'],
+    hints: [
+      'Las preguntas descriptivas responden "qué pasó": media de ventas, distribución por canal, tendencia temporal',
+      'Las preguntas inferenciales responden "por qué" o "qué pasaría": ¿el descuento aumenta ventas? ¿Hay diferencia entre canales?',
+      'Ejemplos descriptivos: "¿Cuál es el gasto promedio?", "¿Cuántos pedidos por día?", "¿Qué canal tiene más ventas?"',
+      'Ejemplos inferenciales: "¿El descuento afecta las ventas?" (correlación), "¿Diferencia entre canales es significativa?" (prueba t)',
+      'Para cada pregunta, indica qué análisis realizarías: media/mediana, histograma, prueba t, regresión, etc.',
+    ],
   },
   assessment: {
     id: '2.1-assess',

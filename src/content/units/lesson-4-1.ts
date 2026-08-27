@@ -171,6 +171,13 @@ for k, v in escenarios.items():
       'Selección apropiada de algoritmos',
       'Justificación de métricas',
     ],
+    hints: [
+      'Escenario A (grupos de clientes sin etiquetas): es NO supervisado → Clustering. Algoritmos: KMeans, DBSCAN, jerárquico',
+      'Escenario B (tumor maligno/benigno con etiquetas): es SUPERVISADO → Clasificación. Algoritmos: SVM, RandomForest, LogisticRegression',
+      'Escenario C (predecir demanda numérica): es SUPERVISADO → Regresión. Algoritmos: LinearRegression, RandomForestRegressor',
+      'Métricas: para clustering usa Silhouette Score; para clasificación usa accuracy/F1; para regresión usa R²/RMSE',
+      'Llena el diccionario escenarios con tipo="supervisado"/"no supervisado", subtipo, algoritmo y métrica para cada caso',
+    ],
   },
   assessment: {
     id: '4.1-assess',

@@ -160,6 +160,13 @@ export const LESSON_2_3: Lesson = {
       'Interpretación adecuada de resultados',
       'Código limpio y documentado',
     ],
+    hints: [
+      '(a) Usa stats.norm.cdf(70000, loc=50000, scale=12000) para P(X ≤ 70000), luego 1 - resultado para P(X > 70000)',
+      '(b) El percentil 90 es el valor donde el 90% gana menos: stats.norm.ppf(0.90, loc=50000, scale=12000)',
+      '(c) Para P(38000 < X < 62000) calcula CDF(62000) - CDF(38000) usando stats.norm.cdf',
+      'Interpreta cada resultado: "El X% de empleados gana más de $70,000" — convierte el decimal a porcentaje',
+      'Imprime cada respuesta con formato claro: print(f"(a) {prob*100:.1f}% gana más de $70,000")',
+    ],
   },
   assessment: {
     id: '2.3-assess',

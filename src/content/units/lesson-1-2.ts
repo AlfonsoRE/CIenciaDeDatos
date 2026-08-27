@@ -140,6 +140,13 @@ for enfoque, info in enfoques.items():
 # 4. ¿Qué herramientas específicas necesitarías?`,
     expectedApproach: 'Justificación clara del enfoque elegido con argumentos.',
     evaluationCriteria: ['Problema bien definido', 'Enfoque justificado', 'Herramientas adecuadas'],
+    hints: [
+      'Piensa en un problema real de tu entorno (escuela, trabajo, casa) donde tengas datos disponibles o accesibles',
+      'Define la relación jerárquica: IA > ML > Ciencia de Datos. El ML es un subconjunto de la IA, y la CD usa ML como herramienta',
+      'Justifica tu enfoque: si necesitas predecir algo → ML; si necesitas automatizar decisiones → IA; si necesitas entender patrones → CD',
+      'Menciona herramientas específicas: pandas para datos, scikit-learn para modelos, matplotlib para visualización',
+      'Estructura tu respuesta en 4 partes: problema → datos disponibles → enfoque elegido → herramientas específicas',
+    ],
   },
   assessment: {
     id: '1.2-assess',

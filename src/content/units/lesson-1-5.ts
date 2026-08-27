@@ -132,6 +132,13 @@ print("\\nLección: siempre usa operaciones vectorizadas con numpy/pandas")`,
 # ¿Cuál es más rápido de escribir? ¿Cuál produce mejor visualización?`,
     expectedApproach: 'Ambas implementaciones funcionales con comparación reflexiva.',
     evaluationCriteria: ['Ambos lenguajes funcionan', 'Comparación justa', 'Reflexión sobre diferencias'],
+    hints: [
+      'En Python usa: import numpy as np; import matplotlib.pyplot as plt; data = np.random.randn(1000); plt.hist(data); plt.show()',
+      'En R usa: data <- rnorm(1000); hist(data, main="Histograma"). R tiene funciones estadísticas más concisas por defecto',
+      'Compara aspectos específicos: cantidad de líneas de código, legibilidad, calidad de gráficas por defecto, disponibilidad de librerías',
+      'No te limites a ejecutar: reflexiona sobre cuál lenguaje se siente más natural para análisis estadístico y cuál para visualización',
+      'Usa print() para mostrar los tiempos de ejecución y comparar rendimiento entre ambos lenguajes',
+    ],
   },
   assessment: {
     id: '1.5-assess',

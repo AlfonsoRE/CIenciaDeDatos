@@ -195,6 +195,13 @@ print(f"\\nMejor modelo: {'Random Forest' if auc_rf > auc_lr else 'Regresión Lo
 # 7. Código documentado`,
     expectedApproach: 'Flujo completo: pregunta → datos → EDA → limpieza → modelado → evaluación → conclusiones.',
     evaluationCriteria: ['Pregunta clara', 'EDA exhaustivo', 'Modelos justificados', 'Resultados comunicados'],
+    hints: [
+      'Empieza definiendo una pregunta de negocio clara y medible: "¿Qué factores predicen la cancelación de clientes?" es mejor que "Analizar clientes"',
+      'Flujo completo: carga → EDA (df.info, describe, visualizaciones) → limpieza (faltantes, outliers) → modelado → evaluación',
+      'Usa al menos 2 modelos diferentes y compáralos: LogisticRegression vs RandomForest, o LinearRegression vs GradientBoosting',
+      'Documenta cada sección con markdown o comentarios: # 1. Pregunta de negocio, # 2. Exploración de datos, etc.',
+      'Termina con conclusiones accionables: "El factor más importante es X, se recomienda acción Y para reducir Z"',
+    ],
   },
   assessment: {
     id: '5.4-assess',

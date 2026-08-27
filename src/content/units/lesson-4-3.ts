@@ -225,6 +225,13 @@ X_train, X_test, y_train, y_test = train_test_split(
 # 4. ¿Qué modelo es mejor? ¿Por qué?`,
     expectedApproach: 'Pipeline(StandardScaler, modelo) → cross_val_score → score en test.',
     evaluationCriteria: ['Pipelines correctos', 'Validación cruzada', 'Comparación justa'],
+    hints: [
+      'Crea pipelines con Pipeline([("scaler", StandardScaler()), ("model", modelo)]) para cada algoritmo',
+      'Compara con cross_val_score(pipeline, X_train, y_train, cv=5, scoring="accuracy") — el escalado se aplica dentro del pipeline',
+      'Prueba al menos 3 modelos: LogisticRegression, RandomForestClassifier, SVC. Todos dentro de pipelines',
+      'Evalúa el mejor modelo en test set: pipeline.fit(X_train, y_train); pipeline.score(X_test, y_test)',
+      '¿Por qué pipelines? Evitan data leakage: el escalado se ajusta solo con datos de entrenamiento en cada fold',
+    ],
   },
   assessment: {
     id: '4.3-assess',

@@ -205,6 +205,13 @@ df = pd.DataFrame({
 # 5. ¿Qué pacientes priorizarías?`,
     expectedApproach: 'EDA → preprocesamiento → GradientBoosting → AUC + sensibilidad al umbral óptimo.',
     evaluationCriteria: ['Análisis exploratorio', 'Modelo adecuado', 'Métricas clínicas relevantes'],
+    hints: [
+      'Empieza con EDA: df.groupby("reingreso_30d").mean() para ver qué variables difieren entre pacientes que reingresan y los que no',
+      'Preprocesa con ColumnTransformer: StandardScaler para numéricas, OneHotEncoder para categóricas (seguro, etc.)',
+      'GradientBoostingClassifier con cross_val_score y scoring="roc_auc" para métrica AUC — ideal para datos médicos desbalanceados',
+      'La sensibilidad es clave en salud: de todos los que realmente reingresan, ¿cuántos detectamos? (verdaderos positivos / total positivos)',
+      'Ajusta el umbral de predicción: lower threshold = más sensibilidad (detectamos más casos, pero más falsos positivos)',
+    ],
   },
   assessment: {
     id: '5.3-assess',

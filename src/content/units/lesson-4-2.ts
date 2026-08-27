@@ -212,6 +212,13 @@ df = pd.DataFrame({
 # 5. ¿Qué variables son más importantes?`,
     expectedApproach: 'pd.get_dummies → train_test_split → LinearRegression → métricas.',
     evaluationCriteria: ['Codificación correcta', 'Evaluación completa', 'Interpretación de coeficientes'],
+    hints: [
+      'Codifica categóricas con pd.get_dummies(df, drop_first=True) para evitar multicolinealidad en regresión',
+      'Divide datos: X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)',
+      'Entrena con LinearRegression().fit(X_train, y_train) y evalúa con model.score(X_test, y_test) para R²',
+      'RMSE se calcula: np.sqrt(mean_squared_error(y_test, y_pred)). Un RMSE más bajo es mejor',
+      'Los coeficientes model.coef_ te dicen la importancia relativa de cada variable: valores absolutos altos = mayor impacto',
+    ],
   },
   assessment: {
     id: '4.2-assess',

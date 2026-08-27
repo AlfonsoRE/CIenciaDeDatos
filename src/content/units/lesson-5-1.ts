@@ -151,6 +151,13 @@ print(f"Diferencia (igualdad de oportunidades): {abs(tpr_m - tpr_f):.3f}")`,
 # Tu tarea: identificar el sesgo y proponer soluciones`,
     expectedApproach: 'Métricas de equidad + análisis por grupo + propuestas de mitigación.',
     evaluationCriteria: ['Detección de sesgo', 'Métricas correctas', 'Propuestas viables'],
+    hints: [
+      'Calcula métricas de equidad por grupo: TPR (True Positive Rate), FPR (False Positive Rate) y tasa de selección para cada género/raza',
+      'Paridad demográfica: la tasa de selección (positivos predichos / total) debe ser similar entre grupos',
+      'Compara las métricas entre grupos: si un grupo tiene TPR mucho menor, hay sesgo en la favorabilidad del modelo',
+      'Propuestas de mitigación: re-entrenar con datos balanceados, usar umbrales diferentes por grupo, o agregar features protectores',
+      'Usa pandas.crosstab y métricas de sklearn.metrics para calcular las métricas por grupo de manera sistemática',
+    ],
   },
   assessment: {
     id: '5.1-assess',

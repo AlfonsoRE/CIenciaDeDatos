@@ -195,6 +195,13 @@ print(f"Conteo real de Diabetes: {conteo_real}")
 # ¿Cuántas ejecuciones necesitas para estimar bien el valor real?`,
     expectedApproach: 'laplace_mechanism(conteo_real, 1, epsilon) repetido múltiples veces.',
     evaluationCriteria: ['Mecanismo correcto', 'Análisis de epsilon', 'Interpretación de utilidad vs privacidad'],
+    hints: [
+      'El mecanismo de Laplace agrega ruido: true_value + np.random.laplace(0, sensitivity/epsilon). Sensitivity=1 para conteo',
+      'Epsilon pequeño (0.5) = más privacidad pero más ruido. epsilon grande (2.0) = menos privacidad pero más precisión',
+      'Ejecuta el mecanismo múltiples veces (100+) con un bucle y calcula la media estimada para ver cómo se comporta',
+      'Grafica la distribución del ruido: plt.hist([laplace_mechanism(conteo_real, 1, 0.5) for _ in range(1000)]) para cada epsilon',
+      'Interpreta: con epsilon=0.5 el ruido es grande (poca utilidad, mucha privacidad); con epsilon=2.0 es más preciso',
+    ],
   },
   assessment: {
     id: '5.2-assess',

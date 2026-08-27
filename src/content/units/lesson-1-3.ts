@@ -178,6 +178,13 @@ fuentes = [
 # Tu código: clasifica cada fuente y explica por qué`,
     expectedApproach: 'Clasificación con justificación para cada fuente.',
     evaluationCriteria: ['Clasificación correcta', 'Justificación clara'],
+    hints: [
+      'Recuerda: estructurados = filas y columnas fijas (SQL, CSV); semiestructurados = tienen formato pero no esquema fijo (JSON, logs); no estructurados = sin formato predefinido (texto, imágenes, audio)',
+      'Base de datos SQL y CSV son estructurados; JSON y logs de servidor son semiestructurados; imágenes, audio y texto libre son no estructurados',
+      'Un correo electrónico mezcla estructurado (metadatos: fecha, remitente) y no estructurado (cuerpo del mensaje)',
+      'Usa print() con un diccionario o DataFrame para presentar la clasificación de forma clara y organizada',
+      'Para cada fuente, justifica la clasificación mencionando si tiene esquema fijo, metadatos parciales o contenido libre',
+    ],
   },
   assessment: {
     id: '1.3-assess',
