@@ -7,15 +7,18 @@
   --color-success: #16A34A;
   --color-warning: #F59E0B;
   --color-danger: #DC2626;
-  --color-bg: #F8FAFC;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #F1F5F9;
-  --color-text: #0F172A;
-  --color-text-secondary: #475569;
-  --color-border: #E2E8F0;
   --radius-card: 16px;
   --radius-btn: 10px;
   --radius-input: 10px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-border: var(--border);
 }
 
 :root {
