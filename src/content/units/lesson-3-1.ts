@@ -66,9 +66,15 @@ export const LESSON_3_1: Lesson = {
       id: '3.1-v1',
       type: 'simulation',
       title: 'Impacto de la limpieza',
-      description: 'Compara estadísticas antes y después de limpiar datos con faltantes y atípicos.',
+      description: 'Compara estadisticas antes y despues de limpiar datos con faltantes y atipicos.',
       chartType: 'comparison',
       interactive: true,
+      items: [
+        { label: 'Valores faltantes', detail: 'Eliminar, imputar con media/mediana, o usar KNN imputation.', color: 'primary' },
+        { label: 'Outliers', detail: 'IQR method, Z-score > 3, o dominio del conocimiento.', color: 'warning' },
+        { label: 'Datos duplicados', detail: 'Detectar y eliminar registros repetidos.', color: 'success' },
+        { label: 'Tipos de datos', detail: 'Convertir strings a fechas, categorías a numéricos, etc.', color: 'danger' },
+      ],
     },
   ],
   activities: [

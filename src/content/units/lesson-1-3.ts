@@ -40,6 +40,12 @@ export const LESSON_1_3: Lesson = {
       title: 'Estructurado vs No estructurado',
       description: 'Comparación visual entre datos en tabla vs datos en texto libre.',
       interactive: false,
+      items: [
+        { label: 'Estructurados', detail: 'Tablas con esquema fijo: CSV, SQL, Excel. Fáciles de consultar y modelar.', color: 'primary' },
+        { label: 'Semiestructurados', detail: 'Etiquetas pero no tabulares: JSON, XML, HTML. Flexibles pero difíciles de analizar.', color: 'warning' },
+        { label: 'No estructurados', detail: 'Texto libre, imágenes, video, audio. El 80% de los datos mundiales.', color: 'danger' },
+        { label: 'Importancia', detail: 'La limpieza y transformación convierte datos crudos en información accionable.', color: 'success' },
+      ],
     },
   ],
   activities: [

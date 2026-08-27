@@ -49,9 +49,15 @@ export const LESSON_3_2: Lesson = {
       id: '3.2-v1',
       type: 'chart',
       title: 'Efecto del escalado',
-      description: 'Comparación antes y después de aplicar Min-Max y Z-score.',
+      description: 'Comparacion antes y despues de aplicar Min-Max y Z-score.',
       chartType: 'histogram',
       interactive: false,
+      items: [
+        { label: 'Min-Max Scaling', detail: 'Reescala al rango [0, 1]. Sensible a outliers.', color: 'primary' },
+        { label: 'Z-Score (StandardScaler)', detail: 'Media=0, desviación=1. Mejor para datos normales.', color: 'warning' },
+        { label: 'Log Transform', detail: 'Reduce asimetría. Ideal para distribuciones log-normales.', color: 'success' },
+        { label: 'One-Hot Encoding', detail: 'Convierte categorías en columnas binarias (0/1).', color: 'danger' },
+      ],
     },
   ],
   activities: [

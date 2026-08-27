@@ -45,10 +45,16 @@ export const LESSON_5_1: Lesson = {
     {
       id: '5.1-v1',
       type: 'chart',
-      title: 'Comparación de métricas por grupo',
-      description: 'Visualiza cómo diferentes métricas varían entre grupos demográficos.',
+      title: 'Comparacion de metricas por grupo',
+      description: 'Visualiza como diferentes metricas varian entre grupos demograficos.',
       chartType: 'bar',
       interactive: false,
+      items: [
+        { label: 'Sesgo de selección', detail: 'Los datos no representan la población real.', color: 'danger' },
+        { label: 'Sesgo de medición', detail: 'Las variables miden algo diferente para cada grupo.', color: 'warning' },
+        { label: 'Fairness metrics', detail: 'Equalized odds, demographic parity, calibration.', color: 'primary' },
+        { label: 'Mitigación', detail: 'Re-muestreo, re-etiquetado, adversarial debiasing.', color: 'success' },
+      ],
     },
   ],
   activities: [

@@ -45,9 +45,15 @@ export const LESSON_1_4: Lesson = {
       id: '1.4-v1',
       type: 'chart',
       title: 'Ejemplos de EDA',
-      description: 'Visualizaciones típicas de un análisis exploratorio.',
+      description: 'Visualizaciones tipicas de un analisis exploratorio.',
       chartType: 'histogram',
       interactive: false,
+      items: [
+        { label: 'Histogramas', detail: 'Muestran la distribución de una variable numérica.', color: 'primary' },
+        { label: 'Box plots', detail: 'Detectan outliers y muestran medianas por grupo.', color: 'warning' },
+        { label: 'Scatter plots', detail: 'Revelan correlaciones entre dos variables numéricas.', color: 'success' },
+        { label: 'Heatmaps', detail: 'Matrices de correlación con colores para identificar patrones.', color: 'danger' },
+      ],
     },
   ],
   activities: [

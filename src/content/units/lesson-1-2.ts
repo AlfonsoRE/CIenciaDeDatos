@@ -37,9 +37,15 @@ export const LESSON_1_2: Lesson = {
     {
       id: '1.2-v1',
       type: 'diagram',
-      title: 'Relación CD, IA, ML',
-      description: 'Diagrama de conjuntos que muestra la relación jerárquica.',
+      title: 'Relacion CD, IA, ML',
+      description: 'Diagrama de conjuntos que muestra la relacion jerarquica.',
       interactive: false,
+      items: [
+        { label: 'Inteligencia Artificial', detail: 'Campo amplio: máquinas que imitan la cognición humana.', color: 'primary' },
+        { label: 'Machine Learning', detail: 'Subconjunto de IA que aprende de datos sin programación explícita.', color: 'warning' },
+        { label: 'Deep Learning', detail: 'Subconjunto de ML con redes neuronales profundas.', color: 'danger' },
+        { label: 'Ciencia de Datos', detail: 'Aplica ML + estadística + dominio para extraer valor de datos.', color: 'success' },
+      ],
     },
   ],
   activities: [

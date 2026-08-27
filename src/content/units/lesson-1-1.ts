@@ -47,6 +47,16 @@ export const LESSON_1_1: Lesson = {
       title: 'El ciclo de vida de la Ciencia de Datos',
       description: 'Diagrama de las 8 fases del ciclo de vida y sus entregables.',
       interactive: false,
+      items: [
+        { label: 'Definición del problema', detail: 'Identificar el objetivo del negocio y las preguntas clave.', color: 'primary' },
+        { label: 'Recolección de datos', detail: 'Obtener datos de fuentes internas y externas.', color: 'primary' },
+        { label: 'Limpieza y preparación', detail: 'Tratar valores faltantes, outliers y transformar.', color: 'warning' },
+        { label: 'Análisis exploratorio (EDA)', detail: 'Visualizar patrones, distribuciones y correlaciones.', color: 'warning' },
+        { label: 'Modelado', detail: 'Aplicar algoritmos de ML según el tipo de problema.', color: 'success' },
+        { label: 'Evaluación', detail: 'Validar métricas: accuracy, RMSE, F1, AUC.', color: 'success' },
+        { label: 'Despliegue', detail: 'Integrar el modelo en producción (API, dashboard).', color: 'danger' },
+        { label: 'Monitoreo', detail: 'Detectar drift y reentrenar periódicamente.', color: 'danger' },
+      ],
     },
   ],
   activities: [

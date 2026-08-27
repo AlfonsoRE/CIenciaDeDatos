@@ -40,8 +40,14 @@ export const LESSON_1_5: Lesson = {
       id: '1.5-v1',
       type: 'comparison',
       title: 'Python vs R vs SQL',
-      description: 'Comparación de fortalezas de cada herramienta.',
+      description: 'Comparacion de fortalezas de cada herramienta.',
       interactive: false,
+      items: [
+        { label: 'Python', detail: 'Versátil: pandas, scikit-learn, TensorFlow. Ideal para ML y producción.', color: 'primary' },
+        { label: 'R', detail: 'Estadística pura: ggplot2, dplyr. Ideal para investigación y visualización.', color: 'warning' },
+        { label: 'SQL', detail: 'Consulta de bases de datos. Indispensable para extraer datos estructurados.', color: 'success' },
+        { label: 'Jupyter Notebooks', detail: 'Entorno interactivo para combinar código, texto y visualizaciones.', color: 'danger' },
+      ],
     },
   ],
   activities: [

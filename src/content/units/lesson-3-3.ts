@@ -48,9 +48,15 @@ export const LESSON_3_3: Lesson = {
       id: '3.3-v1',
       type: 'chart',
       title: 'Scree Plot',
-      description: 'Visualiza la varianza explicada por cada componente para decidir cuántos conservar.',
+      description: 'Visualiza la varianza explicada por cada componente para decidir cuantos conservar.',
       chartType: 'line',
       interactive: false,
+      items: [
+        { label: 'PCA', detail: 'Reduce dimensiones proyectando en direcciones de máxima varianza.', color: 'primary' },
+        { label: 't-SNE', detail: 'Visualización en 2D/3D preservando estructura local.', color: 'warning' },
+        { label: 'Scree Plot', detail: 'Gráfica de varianza explicada acumulada por componente.', color: 'success' },
+        { label: 'Regla de Kaiser', detail: 'Conservar componentes con autovalor > 1.', color: 'danger' },
+      ],
     },
   ],
   activities: [

@@ -72,13 +72,21 @@ export const LESSON_2_4: Lesson = {
       id: '2.4-v1',
       type: 'simulation',
       title: 'Binomial interactiva',
-      description: 'Modifica n (ensayos) y p (probabilidad) para ver cómo cambia la distribución.',
+      description: 'Modifica n (ensayos) y p (probabilidad) para ver como cambia la distribucion.',
       chartType: 'binomial',
       interactive: true,
       parameters: [
         { id: 'n', label: 'Ensayos (n)', min: 1, max: 30, step: 1, defaultValue: 10 },
         { id: 'p', label: 'Probabilidad (p)', min: 0.05, max: 0.95, step: 0.05, defaultValue: 0.5 },
       ],
+      items: [
+        { label: 'Distribución binomial', detail: 'Resultado de n ensayos independientes con probabilidad p.', color: 'primary' },
+        { label: ' Distribución de Poisson', detail: 'Eventos raros en un intervalo de tiempo o espacio.', color: 'warning' },
+        { label: 'Distribución normal', detail: 'Campana de Gauss: la más común en naturaleza.', color: 'success' },
+        { label: 'Aplicación', detail: 'Fraudes, defectos de fabrica, llamadas a un call center.', color: 'danger' },
+      ],
+    },
+  ],
     },
   ],
   activities: [

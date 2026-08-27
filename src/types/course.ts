@@ -15,6 +15,7 @@ export interface VisualExample {
   chartType?: string;
   interactive: boolean;
   parameters?: InteractiveParameter[];
+  items?: { label: string; detail: string; color?: string }[];
 }
 
 export interface InteractiveParameter {

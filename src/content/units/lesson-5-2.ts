@@ -47,9 +47,15 @@ export const LESSON_5_2: Lesson = {
     {
       id: '5.2-v1',
       type: 'diagram',
-      title: 'Técnicas de anonimización',
-      description: 'Diagrama de las diferentes técnicas y cuándo usarlas.',
+      title: 'Tecnicas de anonimizacion',
+      description: 'Diagrama de las diferentes tecnicas y cuando usarlas.',
       interactive: false,
+      items: [
+        { label: 'K-Anonimidad', detail: 'Cada registro es indistinguible de al menos k-1 otros.', color: 'primary' },
+        { label: 'L-Diversidad', detail: 'Garantiza diversidad de valores sensibles dentro de cada grupo.', color: 'warning' },
+        { label: 'Differential Privacy', detail: 'Agrega ruido para proteger individuos en consultas.', color: 'success' },
+        { label: 'GDPR / Leyes', detail: 'Derecho al olvido, consentimiento, minimización de datos.', color: 'danger' },
+      ],
     },
   ],
   activities: [

@@ -69,14 +69,22 @@ export const LESSON_2_2: Lesson = {
     {
       id: '2.2-v1',
       type: 'simulation',
-      title: 'Comparación de medidas',
-      description: 'Ingresa datos y observa cómo cambian media, mediana y moda en tiempo real.',
+      title: 'Comparacion de medidas',
+      description: 'Ingresa datos y observa como cambian media, mediana y moda en tiempo real.',
       chartType: 'histogram',
       interactive: true,
       parameters: [
-        { id: 'n', label: 'Número de datos', min: 5, max: 100, step: 1, defaultValue: 20 },
+        { id: 'n', label: 'Numero de datos', min: 5, max: 100, step: 1, defaultValue: 20 },
         { id: 'outlier', label: 'Incluir outlier', min: 0, max: 1, step: 1, defaultValue: 0 },
       ],
+      items: [
+        { label: 'Media', detail: 'Promedio aritmético. Sensible a valores atípicos.', color: 'primary' },
+        { label: 'Mediana', detail: 'Valor central. Robusta ante outliers.', color: 'warning' },
+        { label: 'Moda', detail: 'Valor más frecuente. Útil para datos categóricos.', color: 'success' },
+        { label: 'Desviación estándar', detail: 'Mide la dispersión respecto a la media.', color: 'danger' },
+      ],
+    },
+  ],
     },
   ],
   activities: [

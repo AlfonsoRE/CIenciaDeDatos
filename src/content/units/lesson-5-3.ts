@@ -46,10 +46,16 @@ export const LESSON_5_3: Lesson = {
     {
       id: '5.3-v1',
       type: 'chart',
-      title: 'Matriz de confusión clínica',
+      title: 'Matriz de confusion clinica',
       description: 'Visualiza verdaderos positivos, falsos negativos y su impacto.',
       chartType: 'heatmap',
       interactive: false,
+      items: [
+        { label: 'Verdadero Positivo', detail: 'Diagnóstico correcto: paciente enfermo → detectado.', color: 'success' },
+        { label: 'Falso Negativo', detail: 'Paciente enfermo → no detectado. ¡El peor error en salud!', color: 'danger' },
+        { label: 'Sensibilidad', detail: 'Capacidad de detectar todos los positivos (recall).', color: 'primary' },
+        { label: 'Especificidad', detail: 'Capacidad de identificar correctamente los negativos.', color: 'warning' },
+      ],
     },
   ],
   activities: [

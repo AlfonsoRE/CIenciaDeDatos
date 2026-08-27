@@ -77,14 +77,22 @@ export const LESSON_2_5: Lesson = {
     {
       id: '2.5-v1',
       type: 'simulation',
-      title: 'Simulación del TLC',
-      description: 'Simula la distribución de medias muestrales para diferentes distribuciones originales.',
+      title: 'Simulacion del TLC',
+      description: 'Simula la distribucion de medias muestrales para diferentes distribuciones originales.',
       chartType: 'histogram',
       interactive: true,
       parameters: [
-        { id: 'sample_size', label: 'Tamaño de muestra', min: 5, max: 100, step: 5, defaultValue: 30 },
-        { id: 'n_samples', label: 'Número de muestras', min: 100, max: 5000, step: 100, defaultValue: 1000 },
+        { id: 'sample_size', label: 'Tamano de muestra', min: 5, max: 100, step: 5, defaultValue: 30 },
+        { id: 'n_samples', label: 'Numero de muestras', min: 100, max: 5000, step: 100, defaultValue: 1000 },
       ],
+      items: [
+        { label: 'Intervalos de confianza', detail: 'Rango probable del parámetro poblacional (ej: 95% CI).', color: 'primary' },
+        { label: 'Prueba de hipótesis', detail: 'H₀ vs H₁: determinar si rechazar la hipótesis nula.', color: 'warning' },
+        { label: 'p-value', detail: 'Probabilidad de observar el resultado si H₀ fuera cierta.', color: 'success' },
+        { label: 'Teorema Central del Límite', detail: 'Las medias muestrales se distribuyen normalmente.', color: 'danger' },
+      ],
+    },
+  ],
     },
   ],
   activities: [

@@ -49,6 +49,12 @@ export const LESSON_5_4: Lesson = {
       title: 'Proyecto integrador de CD',
       description: 'Diagrama del flujo completo de un proyecto de Ciencia de Datos: desde la pregunta hasta el deploy.',
       interactive: false,
+      items: [
+        { label: 'Pregunta de negocio', detail: 'Definir el problema concreto y las métricas de éxito.', color: 'primary' },
+        { label: 'Pipeline de datos', detail: 'ETL, limpieza, feature engineering, almacenamiento.', color: 'warning' },
+        { label: 'Modelado y evaluación', detail: 'Entrenar, validar con cross-validation, comparar modelos.', color: 'success' },
+        { label: 'Deploy y monitoreo', detail: 'API REST, dashboard, detección de drift, reentrenamiento.', color: 'danger' },
+      ],
     },
   ],
   activities: [

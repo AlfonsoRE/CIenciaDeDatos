@@ -216,24 +216,35 @@ export function LessonPlayer() {
                     {lesson.visualExamples[0].type === 'chart' && <Eye size={16} className="text-primary" />}
                     {lesson.visualExamples[0].title}
                   </div>
-                  <div className="grid grid-cols-2 gap-3 text-xs text-text-secondary">
-                    <div className="bg-surface rounded-lg p-3 border border-border">
-                      <p className="font-medium text-text mb-1">Fase 1</p>
-                      <p>Recolección y exploración inicial de los datos.</p>
+                  {lesson.visualExamples[0].items && lesson.visualExamples[0].items!.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-3 text-xs text-text-secondary">
+                      {lesson.visualExamples[0].items!.map((item, idx) => (
+                        <div key={idx} className={`bg-surface rounded-lg p-3 border border-border ${item.color ? `border-l-2 border-l-${item.color}` : ''}`}>
+                          <p className="font-medium text-text mb-1">{item.label}</p>
+                          <p>{item.detail}</p>
+                        </div>
+                      ))}
                     </div>
-                    <div className="bg-surface rounded-lg p-3 border border-border">
-                      <p className="font-medium text-text mb-1">Fase 2</p>
-                      <p>Transformación y preparación para análisis.</p>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3 text-xs text-text-secondary">
+                      <div className="bg-surface rounded-lg p-3 border border-border">
+                        <p className="font-medium text-text mb-1">Fase 1</p>
+                        <p>Recolección y exploración inicial de los datos.</p>
+                      </div>
+                      <div className="bg-surface rounded-lg p-3 border border-border">
+                        <p className="font-medium text-text mb-1">Fase 2</p>
+                        <p>Transformación y preparación para análisis.</p>
+                      </div>
+                      <div className="bg-surface rounded-lg p-3 border border-border">
+                        <p className="font-medium text-text mb-1">Fase 3</p>
+                        <p>Modelado y evaluación de resultados.</p>
+                      </div>
+                      <div className="bg-surface rounded-lg p-3 border border-border">
+                        <p className="font-medium text-text mb-1">Fase 4</p>
+                        <p>Implementación y monitoreo continuo.</p>
+                      </div>
                     </div>
-                    <div className="bg-surface rounded-lg p-3 border border-border">
-                      <p className="font-medium text-text mb-1">Fase 3</p>
-                      <p>Modelado y evaluación de resultados.</p>
-                    </div>
-                    <div className="bg-surface rounded-lg p-3 border border-border">
-                      <p className="font-medium text-text mb-1">Fase 4</p>
-                      <p>Implementación y monitoreo continuo.</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
             </Card>

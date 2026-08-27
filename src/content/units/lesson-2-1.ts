@@ -38,9 +38,15 @@ export const LESSON_2_1: Lesson = {
     {
       id: '2.1-v1',
       type: 'diagram',
-      title: 'Mapa de la estadística en CD',
-      description: 'Diagrama que muestra cómo la estadística se conecta con todas las áreas de la CD.',
+      title: 'Mapa de la estadistica en CD',
+      description: 'Diagrama que muestra como la estadistica se conecta con todas las areas de la CD.',
       interactive: false,
+      items: [
+        { label: 'Estadística descriptiva', detail: 'Resume y describe las características principales de los datos.', color: 'primary' },
+        { label: 'Estadística inferencial', detail: 'Generaliza conclusiones de una muestra a toda la población.', color: 'warning' },
+        { label: 'Pruebas de hipótesis', detail: 'Valida si un efecto observado es real o producto del azar.', color: 'success' },
+        { label: 'Diseño de experimentos', detail: 'Controla variables para establecer causalidad.', color: 'danger' },
+      ],
     },
   ],
   activities: [

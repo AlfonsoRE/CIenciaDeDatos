@@ -42,6 +42,12 @@ export const LESSON_1_6: Lesson = {
       title: 'Fuentes de datos confiables',
       description: 'Comparación de fuentes de datos: reposatorios oficiales, APIs abiertas y datasets comunitarios.',
       interactive: false,
+      items: [
+        { label: 'Kaggle', detail: 'Más de 200K datasets, competencias, kernels con código.', color: 'primary' },
+        { label: 'UCI Machine Learning', detail: 'Repositorio clásico de benchmarks para algoritmos de ML.', color: 'warning' },
+        { label: 'APIs gubernamentales', detail: 'Datos abiertos: INEGI, World Bank, data.gob.mx.', color: 'success' },
+        { label: 'Creación propia', detail: 'Encuestas, scraping, sensores. Control total sobre calidad.', color: 'danger' },
+      ],
     },
   ],
   activities: [

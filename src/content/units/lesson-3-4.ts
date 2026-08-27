@@ -47,10 +47,16 @@ export const LESSON_3_4: Lesson = {
     {
       id: '3.4-v1',
       type: 'chart',
-      title: 'Galería de visualizaciones',
-      description: 'Ejemplos de diferentes tipos de gráficas y sus usos.',
+      title: 'Galeria de visualizaciones',
+      description: 'Ejemplos de diferentes tipos de graficas y sus usos.',
       chartType: 'mixed',
       interactive: false,
+      items: [
+        { label: 'Histogramas', detail: 'Distribución de frecuencias de variables numéricas.', color: 'primary' },
+        { label: 'Box plots', detail: 'Resumen de cinco números + detección de outliers.', color: 'warning' },
+        { label: 'Scatter plots', detail: 'Relación entre dos variables numéricas.', color: 'success' },
+        { label: 'Heatmaps', detail: 'Intensidad de valores en una matriz con colores.', color: 'danger' },
+      ],
     },
   ],
   activities: [
