@@ -87,8 +87,6 @@ export const LESSON_2_4: Lesson = {
       ],
     },
   ],
-    },
-  ],
   activities: [
     {
       id: '2.4-a1',
