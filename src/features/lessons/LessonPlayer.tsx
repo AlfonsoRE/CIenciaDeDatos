@@ -10,7 +10,6 @@ import { ScatterPlot } from '@/components/charts/ScatterPlot';
 import { CorrelationMatrix } from '@/components/charts/CorrelationMatrix';
 import { ActivityEngine } from '@/components/activities/ActivityEngine';
 import { HintSystem } from '@/components/tutor/HintSystem';
-import { TutorPanel } from '@/components/tutor/TutorPanel';
 import { AssessmentEngine, type AssessmentResult } from '@/features/assessment/AssessmentEngine';
 import { FeedbackPanel } from '@/components/feedback/FeedbackPanel';
 import { CodeLab } from '@/components/code/CodeLab';
@@ -359,8 +358,6 @@ export function LessonPlayer() {
           />
         </div>
       )}
-
-      <TutorPanel lessonId={lessonId || ''} currentStage={currentStage} errorHistory={[]} score={masteryResult.score} attempts={1} />
     </div>
   );
 }
