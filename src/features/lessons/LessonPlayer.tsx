@@ -16,7 +16,7 @@ import { FeedbackPanel } from '@/components/feedback/FeedbackPanel';
 import { CodeLab } from '@/components/code/CodeLab';
 import { computeMastery } from '@/engines/mastery/MasteryEngine';
 import { useProgressStore } from '@/stores/progressStore';
-import { logEvent } from '@/storage/db';
+import { logEvent, savePortfolioEntry } from '@/storage/db';
 import { UNITS_DATA } from '@/content/units';
 import { getDatasetPreview } from '@/content/datasets';
 import type { LearningStage } from '@/types/learning';
@@ -72,14 +72,30 @@ export function LessonPlayer() {
     setActivityScores(scores);
     const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
     updateLessonProgress(lessonId || '', unit?.id || '', 'activity', avg);
+    savePortfolioEntry({
+      type: 'activity',
+      lessonId: lessonId || '',
+      title: `Actividad: ${lesson?.title || lessonId}`,
+      content: `Puntuación: ${Math.round(avg)}% (${scores.filter(s => s === 100).length}/${scores.length} correctas)`,
+      metadata: { scores, average: avg },
+      createdAt: new Date().toISOString(),
+    });
     advanceStage();
-  }, [lessonId, unit, updateLessonProgress, advanceStage]);
+  }, [lessonId, unit, lesson, updateLessonProgress, advanceStage]);
 
   const handleAssessmentComplete = useCallback((result: AssessmentResult) => {
     setAssessmentResult(result);
     updateLessonProgress(lessonId || '', unit?.id || '', 'assessment', result.score);
+    savePortfolioEntry({
+      type: 'assessment',
+      lessonId: lessonId || '',
+      title: `Evaluación: ${lesson?.title || lessonId}`,
+      content: `Puntuación: ${result.score}% — ${result.passed ? 'Aprobado' : 'No aprobado'} (${result.correct}/${result.total} correctas)`,
+      metadata: { score: result.score, passed: result.passed, correct: result.correct, total: result.total },
+      createdAt: new Date().toISOString(),
+    });
     advanceStage();
-  }, [lessonId, unit, updateLessonProgress, advanceStage]);
+  }, [lessonId, unit, lesson, updateLessonProgress, advanceStage]);
 
   const handleHintUsed = useCallback(() => {
     setHintsUsed((prev) => prev + 1);

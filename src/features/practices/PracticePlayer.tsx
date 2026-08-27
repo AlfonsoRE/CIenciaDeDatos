@@ -8,6 +8,7 @@ import { CodeLab } from '@/components/code/CodeLab';
 import { getPractice } from '@/content/practices';
 import { getDatasetPreview } from '@/content/datasets';
 import { useProgressStore } from '@/stores/progressStore';
+import { savePortfolioEntry } from '@/storage/db';
 
 export function PracticePlayer() {
   const { practiceId } = useParams();
@@ -37,11 +38,19 @@ export function PracticePlayer() {
   }, [currentStep]);
 
   const handleFinish = useCallback(() => {
-    if (practiceId) {
+    if (practiceId && practice) {
       completePractice(practiceId);
+      savePortfolioEntry({
+        type: 'practice',
+        lessonId: practiceId,
+        title: `Práctica: ${practice.title}`,
+        content: `Completada ${completedSteps.length}/${practice.steps.length} pasos — ${practice.objective}`,
+        metadata: { stepsCompleted: completedSteps.length, totalSteps: practice.steps.length },
+        createdAt: new Date().toISOString(),
+      });
       navigate('/laboratorio');
     }
-  }, [practiceId, completePractice, navigate]);
+  }, [practiceId, practice, completedSteps, completePractice, navigate]);
 
   if (!practice) {
     return (
