@@ -197,9 +197,18 @@ export function CodeLab({
               <>
                 {output.stdout && (
                   <div>
-                    <p className="text-xs font-medium text-text-secondary mb-1">Salida:</p>
-                    <pre className="bg-surface-alt rounded-lg p-3 text-xs text-text font-mono whitespace-pre-wrap overflow-x-auto max-h-60">
-                      {output.stdout}
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-2.5 h-2.5 rounded-full bg-danger/60" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-warning/60" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-success/60" />
+                      <span className="text-xs text-text-secondary ml-1 font-mono">terminal</span>
+                    </div>
+                    <pre className="bg-[#1a1b26] rounded-xl p-4 text-sm text-[#a9b1d6] font-mono whitespace-pre-wrap overflow-x-auto max-h-[420px] leading-relaxed border border-border/30 shadow-inner">
+                      <span className="text-success">$</span> python output
+                      <span className="text-text-secondary">
+{'\n'}{'─'.repeat(50)}
+                      </span>
+{'\n'}{output.stdout}
                     </pre>
                   </div>
                 )}
@@ -207,21 +216,30 @@ export function CodeLab({
                   <div>
                     <p className="text-xs font-medium text-text-secondary mb-1">Gráfica:</p>
                     <div
-                      className="bg-white rounded-lg p-3 border border-border overflow-x-auto"
+                      className="bg-white rounded-xl p-4 border border-border overflow-x-auto shadow-sm"
                       dangerouslySetInnerHTML={{ __html: output.svgOutput }}
                     />
                   </div>
                 )}
                 {output.error && (
                   <div>
-                    <p className="text-xs font-medium text-danger mb-1">Error:</p>
-                    <pre className="bg-danger/5 rounded-lg p-3 text-xs text-danger font-mono whitespace-pre-wrap border border-danger/20">
-                      {output.error}
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-2.5 h-2.5 rounded-full bg-danger/60" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-warning/60" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-success/60" />
+                      <span className="text-xs text-danger ml-1 font-mono">error</span>
+                    </div>
+                    <pre className="bg-[#1a1b26] rounded-xl p-4 text-sm text-danger font-mono whitespace-pre-wrap overflow-x-auto max-h-[420px] leading-relaxed border border-danger/30 shadow-inner">
+                      <span className="text-danger">✗</span> Traceback
+                      <span className="text-text-secondary">
+{'\n'}{'─'.repeat(50)}
+                      </span>
+{'\n'}{output.error}
                     </pre>
                   </div>
                 )}
                 <div className="flex items-center gap-4 text-xs text-text-secondary pt-2 border-t border-border">
-                  <span>Tiempo: {output.duration}ms</span>
+                  <span className="font-mono">{output.duration}ms</span>
                   <Badge variant={output.success ? 'success' : 'danger'} size="sm">
                     {output.success ? 'Completado' : 'Error'}
                   </Badge>
@@ -229,9 +247,11 @@ export function CodeLab({
               </>
             )}
             {!output && status === 'idle' && (
-              <p className="text-sm text-text-secondary text-center py-8">
-                Presiona "Ejecutar" para ver los resultados.
-              </p>
+              <div className="bg-[#1a1b26] rounded-xl p-8 text-center border border-border/30">
+                <p className="text-sm text-text-secondary font-mono">
+                  <span className="text-success">$</span> Presiona "Ejecutar" para ver los resultados.
+                </p>
+              </div>
             )}
           </div>
         )}
