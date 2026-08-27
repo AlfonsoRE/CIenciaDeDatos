@@ -171,6 +171,8 @@ export function LessonPlayer() {
             <Card padding="lg">
               <p className="text-sm text-text-secondary mb-4">{lesson.visualExamples[0].description}</p>
               {lesson.visualExamples[0].chartType === 'distribution' && <DistributionChart interactive />}
+              {lesson.visualExamples[0].chartType === 'histogram' && <DistributionChart interactive />}
+              {lesson.visualExamples[0].chartType === 'binomial' && <DistributionChart interactive />}
               {lesson.visualExamples[0].chartType === 'boxplot' && (
                 <BoxPlot data={[12, 15, 18, 22, 25, 28, 30, 32, 35, 40, 45, 50, 55, 60, 100]} label="Ejemplo de distribución" interactive />
               )}
@@ -187,9 +189,51 @@ export function LessonPlayer() {
                   title="Matriz de correlaciones"
                 />
               )}
-              {!['distribution', 'boxplot', 'scatter', 'correlation'].includes(lesson.visualExamples[0].chartType || '') && (
-                <div className="bg-surface-alt rounded-xl p-8 text-center text-text-secondary text-sm">
-                  Visualización interactiva: {lesson.visualExamples[0].title}
+              {lesson.visualExamples[0].chartType === 'heatmap' && (
+                <CorrelationMatrix
+                  variables={['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D']}
+                  data={Array.from({ length: 100 }, () => [Math.random() * 10, Math.random() * 10, Math.random() * 5, Math.random() * 8])}
+                  title="Mapa de calor"
+                />
+              )}
+              {lesson.visualExamples[0].chartType === 'line' && (
+                <ScatterPlot
+                  data={Array.from({ length: 30 }, (_, i) => ({ x: i, y: Math.sin(i * 0.3) * 10 + 50 + Math.random() * 5 }))}
+                  xLabel="Tiempo" yLabel="Valor" title="Tendencia temporal"
+                />
+              )}
+              {lesson.visualExamples[0].chartType === 'bar' && (
+                <ScatterPlot
+                  data={[{ x: 1, y: 85 }, { x: 2, y: 72 }, { x: 3, y: 91 }, { x: 4, y: 68 }, { x: 5, y: 78 }]}
+                  xLabel="Categoría" yLabel="Frecuencia" title="Comparación por categoría"
+                />
+              )}
+              {(lesson.visualExamples[0].chartType === 'tree' || lesson.visualExamples[0].chartType === 'mixed' || lesson.visualExamples[0].chartType === 'comparison' || !lesson.visualExamples[0].chartType) && (
+                <div className="bg-surface-alt rounded-xl p-6 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-text">
+                    {lesson.visualExamples[0].type === 'diagram' && <BookOpen size={16} className="text-primary" />}
+                    {lesson.visualExamples[0].type === 'comparison' && <Zap size={16} className="text-warning" />}
+                    {lesson.visualExamples[0].type === 'chart' && <Eye size={16} className="text-primary" />}
+                    {lesson.visualExamples[0].title}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-xs text-text-secondary">
+                    <div className="bg-surface rounded-lg p-3 border border-border">
+                      <p className="font-medium text-text mb-1">Fase 1</p>
+                      <p>Recolección y exploración inicial de los datos.</p>
+                    </div>
+                    <div className="bg-surface rounded-lg p-3 border border-border">
+                      <p className="font-medium text-text mb-1">Fase 2</p>
+                      <p>Transformación y preparación para análisis.</p>
+                    </div>
+                    <div className="bg-surface rounded-lg p-3 border border-border">
+                      <p className="font-medium text-text mb-1">Fase 3</p>
+                      <p>Modelado y evaluación de resultados.</p>
+                    </div>
+                    <div className="bg-surface rounded-lg p-3 border border-border">
+                      <p className="font-medium text-text mb-1">Fase 4</p>
+                      <p>Implementación y monitoreo continuo.</p>
+                    </div>
+                  </div>
                 </div>
               )}
             </Card>

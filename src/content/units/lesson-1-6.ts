@@ -35,7 +35,15 @@ export const LESSON_1_6: Lesson = {
       content: 'No todos los datasets son confiables. Verifica la fuente, revisa si hay sesgos, comprueba si los datos fueron simulados o son reales. Datos malos producen análisis malos.',
     },
   ],
-  visualExamples: [],
+  visualExamples: [
+    {
+      id: '1.6-v1',
+      type: 'comparison',
+      title: 'Fuentes de datos confiables',
+      description: 'Comparación de fuentes de datos: reposatorios oficiales, APIs abiertas y datasets comunitarios.',
+      interactive: false,
+    },
+  ],
   activities: [
     {
       id: '1.6-a1',

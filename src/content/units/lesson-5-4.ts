@@ -42,7 +42,15 @@ export const LESSON_5_4: Lesson = {
       content: 'El mejor análisis es inútil si no se comunica bien. Principios: conocé tu audiencia, empezá con el hallazgo clave, usá visualizaciones claras, documentá tu código.',
     },
   ],
-  visualExamples: [],
+  visualExamples: [
+    {
+      id: '5.4-v1',
+      type: 'diagram',
+      title: 'Proyecto integrador de CD',
+      description: 'Diagrama del flujo completo de un proyecto de Ciencia de Datos: desde la pregunta hasta el deploy.',
+      interactive: false,
+    },
+  ],
   activities: [
     {
       id: '5.4-a1',
