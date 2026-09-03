@@ -55,7 +55,7 @@ export const DATASETS: Dataset[] = [
   {
     id: 'iris',
     name: 'Iris Dataset',
-    description: 'Mediciones de 150 flores iris (3 especies)',
+    description: 'Muestra de 9 flores iris (3 especies, 3 por especie); el dataset completo de 150 se carga en el código con sklearn.datasets.load_iris()',
     source: 'UCI Machine Learning Repository',
     columns: [
       { name: 'sepal_length', type: 'number', nullable: false, description: 'Largo del sépalo (cm)' },
@@ -75,7 +75,7 @@ export const DATASETS: Dataset[] = [
       { sepal_length: 5.8, sepal_width: 2.7, petal_length: 5.1, petal_width: 1.9, species: 'virginica' },
       { sepal_length: 7.1, sepal_width: 3.0, petal_length: 5.9, petal_width: 2.1, species: 'virginica' },
     ],
-    size: 150,
+    size: 9,
   },
   {
     id: 'sales-monthly',

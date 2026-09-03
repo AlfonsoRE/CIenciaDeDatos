@@ -257,7 +257,7 @@ salarios = np.concatenate([
       },
       {
         id: '2.2-q5', type: 'numeric', text: 'Si los datos son 5, 10, 15, 20, 25, ¿cuál es la desviación estándar poblacional?',
-        correctAnswer: '7.07', explanation: 'σ = √(Σ(xi-μ)²/N) = √((25+0+0+0+25)/5) = √(10) ≈ 7.07.',
+        correctAnswer: '7.07', explanation: 'μ=15. σ = √(Σ(xi-μ)²/N) = √((100+25+0+25+100)/5) = √(50) ≈ 7.07.',
         conceptLinked: 'Desviación estándar', difficulty: 'medium',
       },
     ],
