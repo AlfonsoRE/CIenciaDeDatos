@@ -20,6 +20,17 @@ export interface AssessmentResult {
   passed: boolean;
 }
 
+function isAnswerCorrect(question: Question, answer: string | number | undefined): boolean {
+  if (answer === undefined) return false;
+  if (question.type === 'numeric') {
+    const numAnswer = typeof answer === 'number' ? answer : parseFloat(answer);
+    const numCorrect = typeof question.correctAnswer === 'number' ? question.correctAnswer : parseFloat(String(question.correctAnswer));
+    if (Number.isNaN(numAnswer) || Number.isNaN(numCorrect)) return false;
+    return Math.abs(numAnswer - numCorrect) < 0.01;
+  }
+  return answer === question.correctAnswer;
+}
+
 export function AssessmentEngine({ questions, passingScore, onComplete }: AssessmentEngineProps) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string | number>>({});
@@ -43,8 +54,7 @@ export function AssessmentEngine({ questions, passingScore, onComplete }: Assess
     if (isLast) {
       let correct = 0;
       questions.forEach((q) => {
-        const userAnswer = answers[q.id];
-        if (userAnswer === q.correctAnswer) correct++;
+        if (isAnswerCorrect(q, answers[q.id])) correct++;
       });
       const score = Math.round((correct / questions.length) * 100);
       setShowResults(true);
@@ -69,7 +79,7 @@ export function AssessmentEngine({ questions, passingScore, onComplete }: Assess
   if (showResults) {
     let correct = 0;
     questions.forEach((q) => {
-      if (answers[q.id] === q.correctAnswer) correct++;
+      if (isAnswerCorrect(q, answers[q.id])) correct++;
     });
     const score = Math.round((correct / questions.length) * 100);
     const passed = score >= passingScore;
@@ -90,7 +100,7 @@ export function AssessmentEngine({ questions, passingScore, onComplete }: Assess
 
         <div className="space-y-3">
           {questions.map((q, idx) => {
-            const isCorrect = answers[q.id] === q.correctAnswer;
+            const isCorrect = isAnswerCorrect(q, answers[q.id]);
             return (
               <div key={q.id} className={cn('p-3 rounded-lg border text-sm', isCorrect ? 'border-success/30 bg-success/5' : 'border-danger/30 bg-danger/5')}>
                 <div className="flex items-start gap-2">
@@ -178,7 +188,17 @@ export function AssessmentEngine({ questions, passingScore, onComplete }: Assess
             type="number"
             step="any"
             value={answers[question.id] !== undefined ? String(answers[question.id]) : ''}
-            onChange={(e) => handleAnswer(parseFloat(e.target.value) || 0)}
+            onChange={(e) => {
+              if (e.target.value === '') {
+                setAnswers((prev) => {
+                  const next = { ...prev };
+                  delete next[question.id];
+                  return next;
+                });
+                return;
+              }
+              handleAnswer(e.target.value);
+            }}
             disabled={submitted}
             className="w-full h-10 px-3 rounded-[var(--radius-input)] border border-border bg-surface text-text text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             placeholder="Tu respuesta numérica"
@@ -187,9 +207,9 @@ export function AssessmentEngine({ questions, passingScore, onComplete }: Assess
       </Card>
 
       {submitted && !isLast && (
-        <Card padding="md" className={cn('border-l-4', answers[question.id] === question.correctAnswer ? 'border-l-success' : 'border-l-danger')}>
+        <Card padding="md" className={cn('border-l-4', isAnswerCorrect(question, answers[question.id]) ? 'border-l-success' : 'border-l-danger')}>
           <p className="text-sm font-medium text-text mb-1">
-            {answers[question.id] === question.correctAnswer ? '¡Correcto!' : 'Incorrecto'}
+            {isAnswerCorrect(question, answers[question.id]) ? '¡Correcto!' : 'Incorrecto'}
           </p>
           <p className="text-sm text-text-secondary">{question.explanation}</p>
         </Card>
