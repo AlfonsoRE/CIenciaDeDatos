@@ -1,13 +1,11 @@
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { LearningPathStepper } from '@/components/navigation/LearningPathStepper';
 import { useLesson } from '@/hooks/useLesson';
-import { ProgressBar } from '@/components/ui/ProgressBar';
 import { cn } from '@/utils/cn';
 
 export function LessonLayout() {
   const navigate = useNavigate();
-  const { currentStage, completedStages, unitTitle, lessonTitle, mastery } = useLesson();
+  const { unitTitle, lessonTitle } = useLesson();
 
   return (
     <div className="min-h-dvh flex flex-col">
@@ -27,18 +25,6 @@ export function LessonLayout() {
               <span className="truncate font-medium text-text">{lessonTitle}</span>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="text-xs text-text-secondary">Dominio</span>
-            <div className="w-20">
-              <ProgressBar value={mastery} size="sm" />
-            </div>
-          </div>
-        </div>
-        <div className="px-4 pb-2">
-          <LearningPathStepper
-            currentStage={currentStage}
-            completedStages={completedStages}
-          />
         </div>
       </header>
 
