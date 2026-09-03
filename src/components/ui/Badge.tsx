@@ -5,6 +5,7 @@ interface BadgeProps {
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
   size?: 'sm' | 'md';
   className?: string;
+  title?: string;
 }
 
 const variantStyles = {
@@ -15,9 +16,10 @@ const variantStyles = {
   info: 'bg-primary/10 text-primary',
 };
 
-export function Badge({ children, variant = 'default', size = 'sm', className }: BadgeProps) {
+export function Badge({ children, variant = 'default', size = 'sm', className, title }: BadgeProps) {
   return (
     <span
+      title={title}
       className={cn(
         'inline-flex items-center font-medium rounded-full',
         size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-sm',

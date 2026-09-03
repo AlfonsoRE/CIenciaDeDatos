@@ -4,7 +4,7 @@ export const PRACTICES_DATA: Practice[] = [
   {
     id: 'p1',
     title: 'Introducción a Python y R para Ciencia de Datos',
-    objective: 'Familiarizarse con los entornos de Python y R, ejecutar comandos básicos y entender por qué ambos lenguajes son fundamentales en Ciencia de Datos.',
+    objective: 'Familiarizarse con el entorno de Python (el único que se ejecuta aquí en el navegador), ejecutar comandos básicos y entender por qué Python y R son fundamentales en Ciencia de Datos.',
     language: 'both',
     steps: [
       {
@@ -193,7 +193,7 @@ print(df.describe())`,
   {
     id: 'p4',
     title: 'Comparación Python vs R',
-    objective: 'Comparar sintaxis y enfoques entre Python y R para tareas comunes de Ciencia de Datos.',
+    objective: 'Comparar la sintaxis y el enfoque de Python (ejecutable aquí) con el de R (referencia conceptual) para tareas comunes de Ciencia de Datos.',
     language: 'both',
     steps: [
       {
@@ -442,7 +442,7 @@ for nombre, datos in distribuciones.items():
     id: 'p8',
     title: 'Comparación con software estadístico',
     objective: 'Demostrar que Python puede realizar las mismas funciones que software estadístico como SPSS o Excel.',
-    language: 'both',
+    language: 'python',
     steps: [
       {
         id: 'p8-s1',

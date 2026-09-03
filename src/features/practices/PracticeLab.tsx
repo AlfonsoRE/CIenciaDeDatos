@@ -12,7 +12,7 @@ const PRACTICES = [
   { id: 'p5', number: 5, title: 'Estadística descriptiva', unit: 2, icon: BarChart3, language: 'python' as const },
   { id: 'p6', number: 6, title: 'Pruebas de hipótesis', unit: 2, icon: TrendingUp, language: 'python' as const },
   { id: 'p7', number: 7, title: 'Simulación de distribuciones', unit: 2, icon: BarChart3, language: 'python' as const },
-  { id: 'p8', number: 8, title: 'Comparación con software estadístico', unit: 2, icon: Code, language: 'both' as const },
+  { id: 'p8', number: 8, title: 'Comparación con software estadístico', unit: 2, icon: Code, language: 'python' as const },
   { id: 'p9', number: 9, title: 'Limpieza y preparación', unit: 3, icon: Database, language: 'python' as const },
   { id: 'p10', number: 10, title: 'Correlación y selección', unit: 3, icon: TrendingUp, language: 'python' as const },
   { id: 'p11', number: 11, title: 'Dashboard interactivo', unit: 3, icon: BarChart3, language: 'python' as const },
@@ -58,8 +58,11 @@ export function PracticeLab() {
                       <h3 className="text-sm font-medium text-text truncate">{practice.title}</h3>
                     </div>
                   </div>
-                  <Badge variant={practice.language === 'both' ? 'info' : practice.language === 'python' ? 'success' : 'warning'}>
-                    {practice.language === 'both' ? 'Python/R' : practice.language === 'python' ? 'Python' : 'R'}
+                  <Badge
+                    variant={practice.language === 'both' ? 'info' : practice.language === 'python' ? 'success' : 'warning'}
+                    title={practice.language === 'both' ? 'Se ejecuta Python; R se compara solo en teoría' : undefined}
+                  >
+                    {practice.language === 'both' ? 'Python + R (teoría)' : practice.language === 'python' ? 'Python' : 'R'}
                   </Badge>
                   <Button size="sm" variant="secondary" onClick={() => navigate(`/laboratorio/${practice.id}`)}>
                     Iniciar
