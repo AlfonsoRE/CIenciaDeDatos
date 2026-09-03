@@ -281,6 +281,88 @@ for (const pkg of ['numpy', 'matplotlib', 'pandas', 'scipy', 'scikit-learn']) {
 
 **Solución** en `python-runner.ts`: Agregado `warnings.filterwarnings('ignore')` antes de ejecutar código del usuario.
 
+### Sesión 2026-09-03
+
+Revisión profesional completa del contenido, la pedagogía y el código (a petición del usuario, "como un maestro de ciencia de datos"), seguida de corrección iterativa de todo lo encontrado. Todos los cambios se verificaron manualmente en navegador (no solo `tsc`/`lint`) antes de cada commit. 9 commits en esta sesión.
+
+#### 1. Sistema de "Dominio" (Feedback) topaba en ~55-61% sin importar el desempeño
+
+**Problema**: En la etapa final de cada lección (Feedback), el score de "Dominio" nunca superaba ~55-61%, incluso con desempeño perfecto.
+
+**Causa**: En `LessonPlayer.tsx`, `computeMastery()` se llamaba con `practiceScore: 0` y `challengeScore: 0` **hardcodeados** (45% del peso de la fórmula en `types/mastery.ts`), sin importar si el código de práctica guiada/reto corría bien.
+
+**Solución**:
+- `LessonPlayer.tsx`: estados `practiceSuccess`/`challengeSuccess` actualizados por el `onStepComplete` real de cada `CodeLab`; alimentan tanto el cálculo local (`computeMastery`) como el persistido (`updateLessonProgress`)
+- `progressStore.ts`: `completeStage` ya no sobrescribe con `100` los puntajes reales guardados por `updateLessonProgress`
+
+#### 2. Pistas del editor de código nunca se contaban (y ejecutar código sí, por error)
+
+**Problema**: Pedir una pista real en `CodeLab` no hacía nada; en cambio, cada ejecución exitosa de código sumaba al contador de "pistas usadas", que **penaliza** el dominio (-3 pts c/u).
+
+**Causa**: `CodeLab.tsx` pasaba `onHintUsed={() => {}}` (no-op) a su `HintSystem` interno; mientras que `LessonPlayer.tsx` conectaba el callback real de pistas (`handleHintUsed`) al `onStepComplete` de práctica/reto.
+
+**Solución**: `CodeLab.tsx` ahora acepta un prop `onHintUsed` real; `LessonPlayer.tsx` lo conecta a `handleHintUsed`, y separa `onStepComplete` para alimentar `practiceSuccess`/`challengeSuccess` en vez de las pistas.
+
+#### 3. "Competencias evaluadas" hardcodeadas en todas las lecciones
+
+**Problema**: El panel de Feedback mostraba siempre `['Distribución normal', 'Probabilidad', 'Cálculo de Z-scores']` (las competencias de la lección 2.3), sin importar la lección.
+
+**Solución**: `FeedbackPanel.tsx` recibe un prop `competencies: string[]`; `LessonPlayer.tsx` pasa `lesson.competencies`.
+
+#### 4. `npm run build` estaba roto (2 errores de TS preexistentes)
+
+**Problema**: `result.correct` y `result.total` no existen en la interfaz `AssessmentResult` (son `correctAnswers`/`totalQuestions`); `tsc -b` fallaba.
+
+**Solución**: Corregidas las referencias en `LessonPlayer.tsx` (uso en `savePortfolioEntry` del paso de evaluación).
+
+#### 5. Timeout de ejecución de Python nunca se usaba
+
+**Problema**: `runPythonCode(code, timeoutMs = 30000)` declaraba el parámetro `timeoutMs` pero nunca lo aplicaba — sin protección real ante código lento.
+
+**Solución** en `python-runner.ts`: `Promise.race` entre la ejecución y un timeout. **Limitación conocida**: Pyodide ejecuta síncronamente en el hilo principal, así que esto solo protege casos con I/O/awaits — un `while True: pass` puro sigue congelando la pestaña (requeriría Web Worker + interrupt buffer para timeout real).
+
+#### 6. Gamificación completamente muerta (racha, tiempo, insignias)
+
+**Problema**: El dashboard mostraba siempre "Tiempo: 0h", "Racha: 0d", y la sección "Insignias recientes" nunca aparecía.
+
+**Causa**: `progressStore.ts` declaraba `addBadge`, `incrementStreak`, `resetStreak`, `addTimeSpent`, pero **ningún componente los invocaba**.
+
+**Solución**:
+- `progressStore.ts`: `checkDailyStreak()` (racha por día consecutivo, con manejo correcto del primer día) + badges reales por hitos: `first-lesson`, `perfect-lesson`, `unit-{id}` (en `completeLesson`), `practice-5`/`practice-all` (en `completePractice`), `streak-3`/`streak-7`/`streak-30` (en `checkDailyStreak`)
+- `RootLayout.tsx`: dispara `checkDailyStreak()` al montar + heartbeat de 60s que llama `addTimeSpent(1)` mientras `document.visibilityState === 'visible'`
+- `completeLesson` cambió de firma: ahora recibe `(lessonId, masteryScore)` para poder otorgar el badge `perfect-lesson`
+
+#### 7. 6 lecciones con solo 1 pregunta de evaluación (aprobado binario)
+
+**Problema**: Lecciones 1.4, 1.5, 1.6, 3.4, 5.1, 5.4 tenían 1 sola pregunta con `passingScore: 70` — imposible sacar exactamente 70%, solo 0% o 100%. Otras 9 lecciones tenían 2.
+
+**Solución**: 21 preguntas nuevas (multiple-choice/interpretation) ancladas en la teoría de cada lección, para que las 22 lecciones tengan entre 3 y 5 preguntas.
+
+#### 8. Bug crítico: preguntas numéricas de evaluación imposibles de acertar
+
+**Problema**: En `AssessmentEngine.tsx`, la respuesta numérica del alumno se guardaba como `number` (`parseFloat`), pero varias lecciones definen `correctAnswer` como **string** (`'30'`, `'7.07'`, `'2'`, `'-1'`, etc.). `numero === "numero"` es **siempre `false`** en JS — esas preguntas nunca podían marcarse correctas, sin importar la respuesta. Afectaba lecciones 2.2, 2.3, 2.5, 3.1, 3.2, 4.2.
+
+**Solución**: Helper `isAnswerCorrect(question, answer)` en `AssessmentEngine.tsx` que, para `type: 'numeric'`, parsea ambos lados y compara con tolerancia `±0.01` (igual que `ActivityEngine`). Reemplazadas las 5 comparaciones `===` directas. También corregido que borrar el input numérico lo guardaba silenciosamente como `0`.
+
+#### 9. Encabezado de lección duplicado (dos steppers de progreso)
+
+**Problema**: `LessonLayout.tsx` (envuelve la ruta) renderizaba su propio `LearningPathStepper` leyendo progreso *persistido*; `LessonPlayer.tsx` renderizaba otro stepper completo con estado *local* de sesión. Dos indicadores de progreso simultáneos y a veces contradictorios.
+
+**Solución**: `LessonLayout.tsx` simplificado a solo breadcrumb + botón volver. `LearningPathStepper.tsx` eliminado (sin más usos). `useLesson.ts` simplificado a solo resolver `unitTitle`/`lessonTitle`.
+
+#### 10. Errores de contenido encontrados en auditoría
+
+- Caracteres chinos insertados por error en texto en español: `lesson-4-3.ts` ("por特征" → "por variable"), `lesson-3-1.ts` ("valores前后" → "valores anteriores/posteriores"), `AGENTS.md` ("warnings特定" → "warnings específicos")
+- Typos: "conclusionses" (lesson-1-1.ts, ¡aparecía en la salida de un `print()` real!), "reposatorios" (lesson-1-6.ts), "Redución" (lesson-4-1.ts)
+- `lesson-2-2.ts` q5: el desarrollo matemático mostrado no cuadraba con la respuesta correcta (`√10 ≈ 3.16` escrito junto a la respuesta `7.07`) — corregido a `√50 ≈ 7.07`
+- Dataset `iris` declaraba `size: 150` con solo 9 filas cargadas — corregido a `size: 9` con nota de que el dataset completo se carga vía `sklearn.load_iris()` en el código Python
+
+#### 11. Confusión Python/R en el laboratorio
+
+**Problema**: Badge "Python/R" en prácticas P1/P4 sugería que ambos lenguajes se ejecutan, pero la plataforma solo tiene Pyodide (Python). P8 (Python vs SPSS/Excel) estaba mal etiquetada `language: 'both'` sin mencionar R en ningún momento.
+
+**Solución**: Badge cambiado a "Python + R (teoría)" con tooltip aclaratorio (`Badge.tsx` ahora soporta `title`); P8 corregida a `language: 'python'`; objetivos de P1/P4 aclaran que solo Python se ejecuta ahí.
+
 ---
 
 ## Gotchas Importantes (para futuras sesiones)
@@ -304,3 +386,25 @@ for (const pkg of ['numpy', 'matplotlib', 'pandas', 'scipy', 'scikit-learn']) {
 9. **ActivityEngine tipos soportados**: `multiple-choice`, `multiple-select`, `numeric`, `classification`. Para nuevos tipos, agregar condición en el renderer.
 
 10. **Portafolio auto-guarda**: Las evidencias se guardan automáticamente al completar actividades (LessonPlayer), prácticas (PracticePlayer) y evaluaciones (LessonPlayer). No se guarda en retos ni práctica guiada.
+
+11. **Comparar respuestas de usuario con `===` es peligroso si los tipos pueden no coincidir**: JS nunca coacciona tipos en `===` (`30 === "30"` es `false`). Antes de comparar una respuesta contra `correctAnswer`, verificar que ambos sean del mismo tipo (ver `isAnswerCorrect` en `AssessmentEngine.tsx`). Esto causó que preguntas numéricas fueran imposibles de acertar (sesión 2026-09-03, #8).
+
+12. **Pyodide bloquea el hilo principal**: la ejecución es síncrona en JS. Un timeout con `Promise.race` (en `python-runner.ts`) solo protege operaciones que ceden el control (I/O, awaits); un bucle infinito síncrono (`while True: pass`) sigue congelando la pestaña sin que el timeout dispare. Timeout real requeriría Web Worker + `pyodide.setInterruptBuffer` (no implementado).
+
+13. **No hay motor de R** en la plataforma, solo Pyodide/Python. Cualquier contenido nuevo que mencione R (comparaciones, ejercicios) debe aclarar explícitamente que es solo referencia conceptual — el editor de código (`CodeLab`) solo ejecuta Python sin importar el prop `language` que reciba.
+
+14. **Nuevas preguntas de `assessment.questions`**: mantener mínimo 3 por lección (con `passingScore: 70`, 1-2 preguntas hace el aprobado binario 0%/100%).
+
+15. **Revisar visualmente el contenido nuevo generado**: en esta sesión aparecieron caracteres CJK (特征, 前后) insertados por error en medio de texto en español — probable artefacto de generación. Si se genera contenido nuevo con un LLM, verificar que no haya caracteres de otros alfabetos con `grep -P "[\x{4E00}-\x{9FFF}]"` o similar.
+
+16. **Al escribir explicaciones con desarrollo matemático** (ej. `explanation` de preguntas `numeric`), verificar que el cálculo mostrado realmente llegue al `correctAnswer` — se encontró un caso (lesson-2-2 q5) donde el resultado final era correcto pero el desarrollo intermedio no cuadraba.
+
+## Pendientes para la próxima sesión
+
+Identificados en la revisión del 2026-09-03 pero no abordados aún (el usuario pausó aquí):
+
+1. **Auditoría de accesibilidad**: contraste de color, `aria-label`s faltantes, navegación por teclado. No se hizo una pasada dedicada.
+2. **Responsive / mobile**: no se probó la app en viewport angosto (el layout usa Tailwind con breakpoints `sm:`/`md:`, pero no se verificó visualmente en pantallas pequeñas).
+3. **Proofreading del resto del contenido**: se auditaron a fondo las preguntas numéricas (14/14 verificadas matemáticamente) y se escaneó todo el contenido por mojibake/typos comunes, pero no se leyó línea por línea el detalle pedagógico de las 23 prácticas ni de las lecciones de unidades 4-5 con el mismo nivel que unidades 1-3.
+4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado; si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
+5. Cosas mencionadas pero descartadas por bajo impacto: `useLesson.ts` ya no expone `mastery`/`completedStages` (si algún componente futuro los necesita, hay que re-derivarlos correctamente, no restaurar el código viejo que estaba roto).

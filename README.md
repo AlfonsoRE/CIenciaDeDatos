@@ -6,12 +6,12 @@ Plataforma educativa e-learning para el curso de **Ciencia de Datos**. Una aplic
 
 Un entorno de aprendizaje interactivo donde los estudiantes pueden:
 
-- **Estudiar 22 lecciones** organizadas en unidades temáticas, cada una con teoría, ejemplos visuales, actividades interactivas, práctica guiada y evaluación.
-- **Ejecutar código Python directamente en el navegador** gracias a Pyodide (WebAssembly) — sin configurar nada en tu máquina.
-- **Completar 23 prácticas de laboratorio** con editor de código embebido, retroalimentación en tiempo real y sistema de pistas.
+- **Estudiar 22 lecciones** organizadas en 5 unidades temáticas, cada una con un flujo de 7 etapas: teoría, ejemplo visual, actividad interactiva, práctica guiada, reto, evaluación y feedback con nivel de dominio.
+- **Ejecutar código Python directamente en el navegador** gracias a Pyodide (WebAssembly) — sin configurar nada en tu máquina. R se usa solo como referencia conceptual en algunas prácticas comparativas; no hay motor de R.
+- **Completar 23 prácticas de laboratorio** con editor de código embebido, retroalimentación en tiempo real y sistema de pistas progresivas.
 - **Visualizar datos** con gráficas de distribución, box plots, dispersión y matrices de correlación generadas desde Python.
-- **Rastrear su progreso** con un sistema de dominio que mide competencias por tema y muestra estadísticas de aprendizaje.
-- **Construir un portafolio de evidencias** con las actividades y prácticas completadas.
+- **Rastrear su progreso** con un sistema de dominio ponderado (actividad, práctica, reto, evaluación) que mide competencias por tema, más racha diaria, tiempo activo e insignias por hitos.
+- **Construir un portafolio de evidencias** con las actividades, prácticas y evaluaciones completadas, exportable a JSON.
 
 ## Stack
 
@@ -32,19 +32,23 @@ Un entorno de aprendizaje interactivo donde los estudiantes pueden:
 
 ### Lecciones interactivas
 
-Cada lección sigue un flujo de 7 etapas: introducción, teoría, ejemplos visuales, actividad, práctica guiada, reto y evaluación. El contenido se adapta al ritmo del estudiante.
+Cada lección sigue un flujo de 7 etapas — teoría, ejemplo visual, actividad, práctica guiada, reto, evaluación y feedback — con navegación bloqueada progresivamente: no se puede saltar a "Evaluación" sin pasar antes por "Actividad". El feedback final refleja el desempeño real en cada etapa, no un valor fijo.
 
 ### Laboratorio de Python
 
-Editor de código integrado con Pyodide. Los estudiantes escriben y ejecutan Python real en el navegador — incluyendo pandas, numpy, matplotlib, scipy y scikit-learn.
+Editor de código integrado con Pyodide (CodeMirror + consola estilo terminal). Los estudiantes escriben y ejecutan Python real en el navegador — incluyendo pandas, numpy, matplotlib, scipy y scikit-learn — con manejo de errores, timeout de ejecución y sistema de pistas progresivas (conceptual → estratégico → código).
 
 ### Evaluación por dominio
 
-Un motor de evaluación calcula el nivel de dominio de cada estudiante por competencia, permitiendo identificar fortalezas y áreas de mejora.
+Un motor de evaluación (`MasteryEngine`) calcula el nivel de dominio de cada lección ponderando actividad, práctica guiada, reto y evaluación, con penalización leve por pistas usadas y bonificación por pocos intentos. Identifica conceptos débiles y da recomendaciones concretas.
+
+### Gamificación
+
+Racha de días consecutivos de uso, tiempo activo acumulado, e insignias por hitos reales: primera lección completada, dominio perfecto, unidad terminada, progreso en el laboratorio de prácticas.
 
 ### Progreso persistente
 
-Todo el progreso se guarda en localStorage del navegador. No se requiere cuenta ni conexión a internet para continuar donde lo dejaste.
+Todo el progreso se guarda en localStorage/IndexedDB del navegador (Zustand + Dexie). No se requiere cuenta ni conexión a internet para continuar donde lo dejaste.
 
 ## Inicio rápido
 
@@ -66,11 +70,12 @@ npm run preview
 
 ```
 src/
-├── content/          # Lecciones, prácticas y datasets
-├── features/         # Módulos: dashboard, curso, lecciones, prácticas, evaluación, progreso
-├── components/       # UI reutilizable, gráficas, editor de código, tutor
-├── engines/          # Motor de Python (Pyodide), evaluación de dominio, tutor IA
-├── stores/           # Estado global con Zustand
+├── content/          # Lecciones (22), prácticas (23) y datasets
+├── features/         # Módulos: dashboard, curso, lecciones, prácticas, evaluación, progreso, portafolio
+├── components/       # UI reutilizable, gráficas, editor de código, sistema de pistas
+├── engines/          # Motor de Python (Pyodide) y evaluación de dominio (MasteryEngine)
+├── stores/           # Estado global con Zustand (progreso, configuración)
+├── storage/          # IndexedDB con Dexie (portafolio, analítica)
 ├── types/            # Definiciones TypeScript
 └── utils/            # Utilidades estadísticas y de formato
 ```
