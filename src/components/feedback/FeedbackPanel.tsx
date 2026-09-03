@@ -12,6 +12,7 @@ interface FeedbackPanelProps {
   weakConcepts: string[];
   recommendations: string[];
   lessonTitle: string;
+  competencies: string[];
   onContinue: () => void;
   onRetry?: () => void;
 }
@@ -29,6 +30,7 @@ export function FeedbackPanel({
   weakConcepts,
   recommendations,
   lessonTitle,
+  competencies,
   onContinue,
   onRetry,
 }: FeedbackPanelProps) {
@@ -97,7 +99,7 @@ export function FeedbackPanel({
           <div>
             <h3 className="text-sm font-semibold text-text">Competencias evaluadas</h3>
             <div className="flex flex-wrap gap-1.5 mt-1.5">
-              {['Distribución normal', 'Probabilidad', 'Cálculo de Z-scores'].map((comp) => (
+              {competencies.map((comp) => (
                 <Badge
                   key={comp}
                   variant={mastery >= 70 ? 'success' : 'warning'}

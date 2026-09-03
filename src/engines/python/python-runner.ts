@@ -97,7 +97,12 @@ _py_result_svg = _svg
 _py_result_error = _error_msg
 `;
 
-    await pyodide.runPythonAsync(runnerCode);
+    // Pyodide ejecuta en el hilo principal: un bucle síncrono infinito igual congela
+    // la pestaña. Esta carrera solo protege el caso async (I/O, awaits explícitos).
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error(`Tiempo de ejecución excedido (${(timeoutMs / 1000).toFixed(0)}s). Revisa si tu código tiene un bucle infinito o una operación muy lenta.`)), timeoutMs);
+    });
+    await Promise.race([pyodide.runPythonAsync(runnerCode), timeoutPromise]);
 
     const stdout = String(pyodide.globals.get('_py_result_stdout') || '');
     const stderr = String(pyodide.globals.get('_py_result_stderr') || '');

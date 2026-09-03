@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { MobileNavigation } from '@/components/navigation/MobileNavigation';
 import { DesktopSidebar } from '@/components/navigation/DesktopSidebar';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { useProgressStore } from '@/stores/progressStore';
 
 function applyTheme(theme: 'light' | 'dark' | 'system') {
   const root = document.documentElement;
@@ -16,6 +17,8 @@ function applyTheme(theme: 'light' | 'dark' | 'system') {
 
 export function RootLayout() {
   const theme = useSettingsStore((s) => s.theme);
+  const checkDailyStreak = useProgressStore((s) => s.checkDailyStreak);
+  const addTimeSpent = useProgressStore((s) => s.addTimeSpent);
 
   useEffect(() => {
     applyTheme(theme);
@@ -27,6 +30,17 @@ export function RootLayout() {
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, [theme]);
+
+  useEffect(() => {
+    checkDailyStreak();
+  }, [checkDailyStreak]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') addTimeSpent(1);
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, [addTimeSpent]);
 
   return (
     <div className="min-h-dvh bg-[var(--bg)]">

@@ -21,6 +21,7 @@ interface CodeLabProps {
   stepNumber?: number;
   totalSteps?: number;
   onStepComplete?: (success: boolean) => void;
+  onHintUsed?: (hintIndex: number) => void;
 }
 
 const darkTheme = EditorView.theme({
@@ -55,6 +56,7 @@ export function CodeLab({
   stepNumber,
   totalSteps,
   onStepComplete,
+  onHintUsed,
 }: CodeLabProps) {
   const [code, setCode] = useState(initialCode);
   const [activeTab, setActiveTab] = useState('code');
@@ -128,7 +130,7 @@ export function CodeLab({
                 Pistas disponibles ({hints.length})
               </Button>
             )}
-            {showHints && <HintSystem hints={hints} onHintUsed={() => {}} />}
+            {showHints && <HintSystem hints={hints} onHintUsed={onHintUsed ?? (() => {})} />}
           </div>
         )}
 

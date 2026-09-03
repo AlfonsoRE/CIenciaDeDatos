@@ -52,6 +52,8 @@ export function LessonPlayer() {
   const [activityScores, setActivityScores] = useState<number[]>([]);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [hintsUsed, setHintsUsed] = useState(0);
+  const [practiceSuccess, setPracticeSuccess] = useState<boolean | null>(null);
+  const [challengeSuccess, setChallengeSuccess] = useState<boolean | null>(null);
 
   const currentIdx = STAGES.findIndex((s) => s.key === currentStage);
 
@@ -89,8 +91,8 @@ export function LessonPlayer() {
       type: 'assessment',
       lessonId: lessonId || '',
       title: `Evaluación: ${lesson?.title || lessonId}`,
-      content: `Puntuación: ${result.score}% — ${result.passed ? 'Aprobado' : 'No aprobado'} (${result.correct}/${result.total} correctas)`,
-      metadata: { score: result.score, passed: result.passed, correct: result.correct, total: result.total },
+      content: `Puntuación: ${result.score}% — ${result.passed ? 'Aprobado' : 'No aprobado'} (${result.correctAnswers}/${result.totalQuestions} correctas)`,
+      metadata: { score: result.score, passed: result.passed, correct: result.correctAnswers, total: result.totalQuestions },
       createdAt: new Date().toISOString(),
     });
     advanceStage();
@@ -109,17 +111,17 @@ export function LessonPlayer() {
 
   const masteryResult = computeMastery({
     activityScore: activityScores.length > 0 ? activityScores.reduce((a, b) => a + b, 0) / activityScores.length : 0,
-    practiceScore: 0,
-    challengeScore: 0,
+    practiceScore: practiceSuccess ? 100 : 0,
+    challengeScore: challengeSuccess ? 100 : 0,
     assessmentScore: assessmentResult?.score || 0,
     hintsUsed,
     attempts: 1,
   });
 
   const handleCompleteLesson = useCallback(() => {
-    completeLesson(lessonId || '');
+    completeLesson(lessonId || '', masteryResult.score);
     navigate('/curso');
-  }, [lessonId, completeLesson, navigate]);
+  }, [lessonId, completeLesson, masteryResult.score, navigate]);
 
   if (!lesson) {
     return (
@@ -297,7 +299,11 @@ export function LessonPlayer() {
               hints={lesson.guidedPractice.steps.flatMap((s) => s.hints)}
               datasetInfo={lesson.guidedPractice.dataset ? getDatasetPreview(lesson.guidedPractice.dataset.replace('.csv', '').trim()) : undefined}
               totalSteps={lesson.guidedPractice.steps.length}
-              onStepComplete={(ok) => { if (ok) handleHintUsed(); }}
+              onStepComplete={(ok) => {
+                setPracticeSuccess(ok);
+                updateLessonProgress(lessonId || '', unit?.id || '', 'guided-practice', ok ? 100 : 0);
+              }}
+              onHintUsed={handleHintUsed}
             />
           ) : (
             <Card padding="lg" className="text-center text-text-secondary text-sm py-12">Práctica pendiente de desarrollo.</Card>
@@ -328,7 +334,11 @@ export function LessonPlayer() {
             initialCode={lesson.challenge.codeTemplate}
             language={lesson.challenge.language === 'r' ? 'r' : 'python'}
             hints={lesson.challenge.hints || ['Revisa la teoría de la lección', 'Desglosa el problema en pasos pequeños', 'Prueba tu código con datos de ejemplo']}
-            onStepComplete={(ok) => { if (ok) handleHintUsed(); }}
+            onStepComplete={(ok) => {
+              setChallengeSuccess(ok);
+              updateLessonProgress(lessonId || '', unit?.id || '', 'challenge', ok ? 100 : 0);
+            }}
+            onHintUsed={handleHintUsed}
           />
           <Card padding="md" className="border-l-4 border-l-primary">
             <p className="text-xs font-medium text-text mb-1">Criterios de evaluación:</p>
@@ -363,8 +373,17 @@ export function LessonPlayer() {
             weakConcepts={masteryResult.weakConcepts}
             recommendations={masteryResult.recommendations}
             lessonTitle={lesson.title}
+            competencies={lesson.competencies}
             onContinue={handleCompleteLesson}
-            onRetry={() => { setCurrentStage('theory'); setCompletedStages([]); setActivityScores([]); setAssessmentResult(null); }}
+            onRetry={() => {
+              setCurrentStage('theory');
+              setCompletedStages([]);
+              setActivityScores([]);
+              setAssessmentResult(null);
+              setPracticeSuccess(null);
+              setChallengeSuccess(null);
+              setHintsUsed(0);
+            }}
           />
         </div>
       )}
