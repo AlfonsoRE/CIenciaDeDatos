@@ -51,7 +51,7 @@ export const LESSON_4_3: Lesson = {
       chartType: 'tree',
       interactive: false,
       items: [
-        { label: 'Árbol de decisión', detail: 'Divisiones binarias por特征. Fácil de interpretar.', color: 'primary' },
+        { label: 'Árbol de decisión', detail: 'Divisiones binarias por variable. Fácil de interpretar.', color: 'primary' },
         { label: 'Random Forest', detail: 'Ensemble de árboles. Reduce overfitting.', color: 'warning' },
         { label: 'Overfitting', detail: 'El modelo memoriza el entrenamiento pero falla en test.', color: 'danger' },
         { label: 'Feature importance', detail: 'Mide qué variables contribuyen más a la predicción.', color: 'success' },

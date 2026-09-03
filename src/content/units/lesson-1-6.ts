@@ -40,7 +40,7 @@ export const LESSON_1_6: Lesson = {
       id: '1.6-v1',
       type: 'comparison',
       title: 'Fuentes de datos confiables',
-      description: 'Comparación de fuentes de datos: reposatorios oficiales, APIs abiertas y datasets comunitarios.',
+      description: 'Comparación de fuentes de datos: repositorios oficiales, APIs abiertas y datasets comunitarios.',
       interactive: false,
       items: [
         { label: 'Kaggle', detail: 'Más de 200K datasets, competencias, kernels con código.', color: 'primary' },

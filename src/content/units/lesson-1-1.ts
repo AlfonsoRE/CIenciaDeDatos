@@ -101,7 +101,7 @@ export const LESSON_1_1: Lesson = {
         instruction: 'Investiga y muestra las áreas que componen la Ciencia de Datos.',
         codeTemplate: `# Las 5 áreas fundamentales de la Ciencia de Datos
 areas = {
-    "Estadística": "Base matemática para inferir conclusionses de datos",
+    "Estadística": "Base matemática para inferir conclusiones de datos",
     "Programación": "Herramientas para manipular y analizar datos (Python, R)",
     "Machine Learning": "Algoritmos que aprenden de los datos",
     "Conocimiento del dominio": "Contexto del problema a resolver",

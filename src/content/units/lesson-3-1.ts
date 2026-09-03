@@ -32,7 +32,7 @@ export const LESSON_3_1: Lesson = {
         'Eliminar columnas con muchos faltantes (>50%)',
         'Imputar con media/mediana (variables numéricas)',
         'Imputar con moda (variables categóricas)',
-        'Imputar con valores前后 (forward/backward fill) en series temporales',
+        'Imputar con valores anteriores/posteriores (forward/backward fill) en series temporales',
         'Usar modelos de imputación (KNN, regresión)',
       ],
     },

@@ -37,7 +37,7 @@ export const LESSON_4_1: Lesson = {
       title: 'Subtipos no supervisados',
       items: [
         'Clustering: agrupar datos similares (K-Means, DBSCAN)',
-        'Redución de dimensionalidad: simplificar datos (PCA, t-SNE)',
+        'Reducción de dimensionalidad: simplificar datos (PCA, t-SNE)',
         'Reglas de asociación: encontrar relaciones (Apriori)',
       ],
     },

@@ -297,7 +297,7 @@ for (const pkg of ['numpy', 'matplotlib', 'pandas', 'scipy', 'scikit-learn']) {
 
 6. **Tailwind CSS v4 `@theme inline`**: Para variables CSS dinámicas que cambian con dark mode, usar `@theme inline` en vez de `@theme`. El `@theme` normal resuelve valores en build time.
 
-7. **Consola de warnings Python**: El runner suprime warnings con `warnings.filterwarnings('ignore')`. Si se necesitan mostrar warnings特定, filtrar por módulo específico.
+7. **Consola de warnings Python**: El runner suprime warnings con `warnings.filterwarnings('ignore')`. Si se necesitan mostrar warnings específicos, filtrar por módulo específico.
 
 8. **Edición de lesson files**: Al agregar `items` a `visualExamples` o `hints` a `challenge`, verificar que no haya brackets duplicados — patrón `], }, ], }, ]` indica error de sintaxis.
 
