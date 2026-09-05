@@ -317,6 +317,20 @@ Matemática de preguntas `numeric` (4.2-a1, 4.2-q1) verificada manualmente — c
 
 `npm run build` y `npm run lint` pasan sin errores nuevos tras los cambios (los warnings preexistentes de `AssessmentEngine.tsx`/`LessonPlayer.tsx` sobre `Math.random`/memoización no están relacionados).
 
+#### 3. Responsive / mobile (pendiente #2 de la sesión anterior)
+
+**Revisado**: `RootLayout.tsx`/`DesktopSidebar.tsx`/`MobileNavigation.tsx`, `CodeLab.tsx`, gráficas de `components/charts/`, grids de `CourseDashboard.tsx`/`ProgressView.tsx`/`CourseMap.tsx`/`PracticeLab.tsx`/`UnitView.tsx`/`EvidencePortfolio.tsx`. Las herramientas de navegador (`resize_window`) no lograron cambiar el viewport real de la pestaña (la captura seguía reportando ~1568px de ancho tras 3 intentos), así que la revisión fue estática (lectura de código + cálculo de anchos), no visual en el navegador.
+
+**Encontrado y corregido**:
+- **Bug real de navegación**: `MobileNavigation.tsx` tenía un tab "Más" que enlazaba a `/mas`, ruta mapeada en `App.tsx` directo a `SettingsPage` — esto dejaba `/portafolio` **completamente inalcanzable en móvil** (en desktop sí está en `DesktopSidebar`). Corregido: "Más" ahora abre un menú desplegable con accesos a Portafolio y Configuración; eliminada la ruta `mas` huérfana de `App.tsx`.
+- `CodeLab.tsx`: la barra de herramientas del editor (Ejecutar/Reiniciar/Copiar/tema) no tenía `overflow-x-auto` ni `shrink-0` en los botones — en viewports angostos (~375px) el botón de tema podía quedar clippeado por el `overflow-hidden` del `Card` contenedor. Agregado `overflow-x-auto` + `shrink-0` para que la barra scrollee horizontalmente en vez de recortar contenido.
+
+**Verificado sin cambios necesarios**: gráficas de Recharts usan `ResponsiveContainer width="100%"`; `CorrelationMatrix` (SVG) escala con `viewBox` + `w-full` dentro de un `Card` con `overflow-x-auto`; stepper de `LessonPlayer`/`PracticePlayer` ya usa `overflow-x-auto` + `whitespace-nowrap`; grids de stats (`CourseDashboard`, `ProgressView`) ya usan `grid-cols-2 sm:grid-cols-4`; listas con texto largo usan el patrón `flex-1 min-w-0` + `truncate` de forma consistente.
+
+`npm run build` y `npm run lint` pasan sin warnings nuevos (los preexistentes de `Math.random`/memoización en `AssessmentEngine.tsx`/`LessonPlayer.tsx` no están relacionados).
+
+**Nota para futuras sesiones**: la herramienta de automatización de navegador no pudo redimensionar el viewport en este entorno (Windows, ventana gestionada por el SO) — si se necesita verificación visual real en mobile, probar con las DevTools de Chrome abiertas manualmente en modo dispositivo, o revisar en un dispositivo/emulador real.
+
 ### Sesión 2026-09-03
 
 Revisión profesional completa del contenido, la pedagogía y el código (a petición del usuario, "como un maestro de ciencia de datos"), seguida de corrección iterativa de todo lo encontrado. Todos los cambios se verificaron manualmente en navegador (no solo `tsc`/`lint`) antes de cada commit. 9 commits en esta sesión.
@@ -440,7 +454,7 @@ Revisión profesional completa del contenido, la pedagogía y el código (a peti
 Identificados en la revisión del 2026-09-03 pero no abordados aún (el usuario pausó aquí):
 
 1. ~~**Auditoría de accesibilidad**~~ — completada en la sesión 2026-09-05 (ver historial arriba): `aria-label`s faltantes y disclosure widgets corregidos. Queda pendiente el contraste de `text-success`/`text-warning` en modo claro (decisión de diseño, ver nota en el historial).
-2. **Responsive / mobile**: no se probó la app en viewport angosto (el layout usa Tailwind con breakpoints `sm:`/`md:`, pero no se verificó visualmente en pantallas pequeñas).
+2. ~~**Responsive / mobile**~~ — completada en la sesión 2026-09-05 (ver historial arriba), pero solo con revisión estática de código: la automatización de navegador no pudo cambiar el viewport en este entorno. Se corrigió un bug real (Portafolio inalcanzable en móvil) y un riesgo de overflow en `CodeLab`. Queda pendiente una verificación visual real (DevTools en modo dispositivo o dispositivo físico) para confirmar que no hay más casos no detectables por lectura de código.
 3. ~~**Proofreading del resto del contenido**~~ — completado en la sesión 2026-09-05 (ver historial arriba): unidades 4-5 y las 23 prácticas revisadas línea por línea.
 4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado; si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
 5. Cosas mencionadas pero descartadas por bajo impacto: `useLesson.ts` ya no expone `mastery`/`completedStages` (si algún componente futuro los necesita, hay que re-derivarlos correctamente, no restaurar el código viejo que estaba roto).

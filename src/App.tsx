@@ -25,7 +25,6 @@ export default function App() {
           <Route path="progreso" element={<ProgressView />} />
           <Route path="portafolio" element={<EvidencePortfolio />} />
           <Route path="configuracion" element={<SettingsPage />} />
-          <Route path="mas" element={<SettingsPage />} />
 
           <Route path="curso/leccion/:lessonId" element={<LessonLayout />}>
             <Route index element={<LessonPlayer />} />

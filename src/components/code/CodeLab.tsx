@@ -136,12 +136,13 @@ export function CodeLab({
 
         {activeTab === 'code' && (
           <div className="relative">
-            <div className="flex items-center gap-1 px-3 py-1.5 bg-surface border-b border-border">
+            <div className="flex items-center gap-1 px-3 py-1.5 bg-surface border-b border-border overflow-x-auto">
               <Button
                 size="sm"
                 variant={status === 'running' ? 'danger' : 'success'}
                 onClick={status === 'running' ? stop : handleRun}
                 disabled={status === 'loading'}
+                className="shrink-0"
               >
                 {status === 'loading' ? (
                   <><Loader2 size={12} className="animate-spin" /> Cargando...</>
@@ -151,19 +152,20 @@ export function CodeLab({
                   <><Play size={12} /> Ejecutar</>
                 )}
               </Button>
-              <Button size="sm" variant="ghost" onClick={handleReset}>
+              <Button size="sm" variant="ghost" onClick={handleReset} className="shrink-0">
                 <RotateCcw size={12} /> Reiniciar
               </Button>
-              <Button size="sm" variant="ghost" onClick={handleCopy}>
+              <Button size="sm" variant="ghost" onClick={handleCopy} className="shrink-0">
                 {copied ? <Check size={12} /> : <Copy size={12} />}
                 {copied ? 'Copiado' : 'Copiar'}
               </Button>
-              <div className="flex-1" />
+              <div className="flex-1 min-w-2" />
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => setIsDark(!isDark)}
                 aria-label={isDark ? 'Cambiar editor a tema claro' : 'Cambiar editor a tema oscuro'}
+                className="shrink-0"
               >
                 {isDark ? '☀️' : '🌙'}
               </Button>
