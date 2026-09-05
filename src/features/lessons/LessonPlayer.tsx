@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, BookOpen, Eye, Puzzle, Code, Zap, ClipboardCheck, MessageCircle, CheckCircle2, Lock } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -130,6 +130,14 @@ export function LessonPlayer() {
     completeLesson(lessonId || '', masteryResult.score);
     navigate('/curso');
   }, [lessonId, completeLesson, masteryResult.score, navigate]);
+
+  const hasAutoCompletedRef = useRef(false);
+  useEffect(() => {
+    if (currentStage === 'feedback' && !hasAutoCompletedRef.current) {
+      hasAutoCompletedRef.current = true;
+      completeLesson(lessonId || '', masteryResult.score);
+    }
+  }, [currentStage, lessonId, masteryResult.score, completeLesson]);
 
   if (!lesson) {
     return (

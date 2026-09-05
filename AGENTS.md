@@ -330,6 +330,18 @@ El usuario va a subir este proyecto (frontend puro, sin backend) al repositorio 
 
 **Nota para futuras sesiones**: si un usuario reporta "el progreso no se guardó" en una vista pero SÍ aparece en otra, revisar primero si ambas vistas leen la misma fuente de datos (`progressStore`) antes de asumir un bug de persistencia — puede ser, como aquí, una diferencia puramente visual entre dos componentes que muestran el mismo estado de formas distintas.
 
+### Sesión 2026-09-05 (continuación 5) — bug real: lección se pierde si no se hace clic en el botón final de Feedback
+
+El usuario mandó capturas de pantalla mostrando que la lección 1.1 tenía la barra de `mastery` casi llena en `UnitView.tsx`, pero el círculo seguía vacío (no completada) — y Dashboard/CourseMap coincidían en 0%. A diferencia del hallazgo anterior (visual), aquí los tres lugares SÍ coincidían entre sí, lo cual apuntaba a que la lección de verdad no estaba marcada como completada, no a un problema de renderizado.
+
+**Causa raíz confirmada por el usuario**: en `LessonPlayer.tsx`, `completeLesson()` (lo único que marca `lessons[id].completed = true` en `progressStore`) solo se dispara desde `handleCompleteLesson`, conectado *exclusivamente* al botón final de la etapa "Feedback" (`onContinue` en `FeedbackPanel.tsx:122`, texto "Continuar al siguiente tema" / "Volver al curso"). El usuario confirmó que llegó a esa pantalla, vio su 100% de dominio, pero salió dando clic en "Curso" del menú lateral **en vez de** darle clic a ese botón — perdiendo todo el crédito de la lección silenciosamente, sin ningún aviso. Esto es un defecto de diseño real, no un caso aislado: cualquier estudiante puede reproducirlo con solo navegar por el sidebar en la pantalla de resultados.
+
+**Solución**: agregado un `useEffect` en `LessonPlayer.tsx` que llama a `completeLesson(lessonId, masteryResult.score)` automáticamente en cuanto `currentStage === 'feedback'` (guardado con un `useRef` para que solo se ejecute una vez por lección). El botón "Continuar al siguiente tema"/"Volver al curso" se deja intacto (sigue llamando a `completeLesson` + `navigate('/curso')`, ahora de forma redundante pero inofensiva — `completeLesson` ya es idempotente, ver `wasAlreadyCompleted` en `progressStore.ts`). Con esto, llegar a ver los resultados de la lección es suficiente para que cuente como completada, sin depender de un clic adicional que es fácil de omitir.
+
+**Verificado en vivo** (no solo leyendo código): se recorrieron manualmente las 7 etapas reales de la lección 1.1 en el navegador (teoría → visual → 2 actividades → práctica guiada con ejecución real de Pyodide → reto con código propio → evaluación de 3 preguntas) hasta llegar a Feedback (100% Dominio), y en vez de darle clic al botón se navegó por el sidebar a "Curso" — confirmando que ahora sí queda marcada como completada (check verde) en las tres vistas (Dashboard 1/22, CourseMap 17% unidad 1, UnitView). Insignias "Primer paso" y "Dominio perfecto" también se otorgaron correctamente.
+
+**Nota para futuras sesiones**: si aparece un reporte similar ("hice todo pero no cuenta como completado"), revisar primero si el flujo requiere un clic final no obvio antes de asumir un bug de datos — este patrón (acción de guardado atada a un botón de "continuar" en vez de al momento en que el resultado ya es conocido) es fácil de repetir en otras pantallas con un flujo similar (ej. si se agregara feedback a nivel de unidad o de práctica).
+
 #### 1. Proofreading de unidades 4-5 y las 23 prácticas (pendiente #3 de la sesión anterior)
 
 **Revisado**: lecciones 4.1-5.4 línea por línea (teoría, actividades, hints, evaluación) y `practices/index.ts` completo (1306 líneas).
