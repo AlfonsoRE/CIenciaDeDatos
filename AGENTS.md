@@ -331,6 +331,16 @@ Matemática de preguntas `numeric` (4.2-a1, 4.2-q1) verificada manualmente — c
 
 **Nota para futuras sesiones**: la herramienta de automatización de navegador no pudo redimensionar el viewport en este entorno (Windows, ventana gestionada por el SO) — si se necesita verificación visual real en mobile, probar con las DevTools de Chrome abiertas manualmente en modo dispositivo, o revisar en un dispositivo/emulador real.
 
+#### 4. Contraste insuficiente de `text-success`/`text-warning` en modo claro (pendiente #1 de la sesión anterior)
+
+**Problema**: `--color-success` (`#16A34A`) y `--color-warning` (`#F59E0B`) estaban definidos en el bloque `@theme` (estático, mismo valor en ambos modos). Como texto sobre fondos claros (`--bg`/`--surface`/`--surface-alt`) daban ~3.30:1 y ~2.15:1 — ambos por debajo del mínimo WCAG AA de 4.5:1 para texto normal. En modo oscuro sí pasaban (≥4.44:1).
+
+**Solución**: Movidos `--color-success`/`--color-warning` de `@theme` a `@theme inline`, referenciando nuevas variables `--success`/`--warning` definidas por modo (mismo patrón que `--color-text` — gotcha #6):
+- `:root` (modo claro): `--success: #15803D` (green-700), `--warning: #B45309` (amber-700) — ambos ≥4.58:1 contra `bg`/`surface`/`surface-alt`.
+- `.dark` (modo oscuro): `--success: #4ADE80` (green-400), `--warning: #FBBF24` (amber-400) — ambos ≥5.94:1 contra `bg`/`surface`/`surface-alt` oscuros (más margen que los valores anteriores).
+
+Contrastes verificados con la fórmula de luminancia relativa WCAG (script Node ad-hoc), no solo visualmente. `npm run build`/`lint` sin warnings nuevos.
+
 ### Sesión 2026-09-03
 
 Revisión profesional completa del contenido, la pedagogía y el código (a petición del usuario, "como un maestro de ciencia de datos"), seguida de corrección iterativa de todo lo encontrado. Todos los cambios se verificaron manualmente en navegador (no solo `tsc`/`lint`) antes de cada commit. 9 commits en esta sesión.
@@ -453,7 +463,7 @@ Revisión profesional completa del contenido, la pedagogía y el código (a peti
 
 Identificados en la revisión del 2026-09-03 pero no abordados aún (el usuario pausó aquí):
 
-1. ~~**Auditoría de accesibilidad**~~ — completada en la sesión 2026-09-05 (ver historial arriba): `aria-label`s faltantes y disclosure widgets corregidos. Queda pendiente el contraste de `text-success`/`text-warning` en modo claro (decisión de diseño, ver nota en el historial).
+1. ~~**Auditoría de accesibilidad**~~ — completada en la sesión 2026-09-05 (ver historial arriba): `aria-label`s faltantes y disclosure widgets corregidos, y contraste de `text-success`/`text-warning` corregido (ver sección #12 del historial).
 2. ~~**Responsive / mobile**~~ — completada en la sesión 2026-09-05 (ver historial arriba), pero solo con revisión estática de código: la automatización de navegador no pudo cambiar el viewport en este entorno. Se corrigió un bug real (Portafolio inalcanzable en móvil) y un riesgo de overflow en `CodeLab`. Queda pendiente una verificación visual real (DevTools en modo dispositivo o dispositivo físico) para confirmar que no hay más casos no detectables por lectura de código.
 3. ~~**Proofreading del resto del contenido**~~ — completado en la sesión 2026-09-05 (ver historial arriba): unidades 4-5 y las 23 prácticas revisadas línea por línea.
 4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado; si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).

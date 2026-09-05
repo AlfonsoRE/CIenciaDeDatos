@@ -4,8 +4,6 @@
   --color-primary: #2563EB;
   --color-primary-dark: #1E40AF;
   --color-secondary: #06B6D4;
-  --color-success: #16A34A;
-  --color-warning: #F59E0B;
   --color-danger: #DC2626;
   --radius-card: 16px;
   --radius-btn: 10px;
@@ -19,6 +17,8 @@
   --color-text: var(--text);
   --color-text-secondary: var(--text-secondary);
   --color-border: var(--border);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
 }
 
 :root {
@@ -29,6 +29,8 @@
   --text-secondary: #475569;
   --text-h: #0F172A;
   --border: #E2E8F0;
+  --success: #15803D;
+  --warning: #B45309;
   --code-bg: #F1F5F9;
   --accent: #2563EB;
   --accent-bg: rgba(37, 99, 235, 0.1);
@@ -49,6 +51,8 @@
   --text-secondary: #94A3B8;
   --text-h: #F8FAFC;
   --border: #475569;
+  --success: #4ADE80;
+  --warning: #FBBF24;
   --code-bg: #1E293B;
   --accent: #818CF8;
   --accent-bg: rgba(129, 140, 248, 0.15);
