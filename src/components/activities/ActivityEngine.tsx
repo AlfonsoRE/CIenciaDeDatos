@@ -6,6 +6,19 @@ import { CheckCircle2, XCircle, RotateCcw, ChevronRight } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { Activity, ActivityOption } from '@/types/course';
 
+function isActivityAnswerCorrect(activity: Activity, answer: string | string[] | undefined): boolean {
+  if (activity.type === 'multiple-select' && Array.isArray(answer)) {
+    const correct = activity.correctAnswer as string[];
+    return answer.length === correct.length && answer.every((a) => correct.includes(a));
+  }
+  if (activity.type === 'numeric') {
+    const numAnswer = parseFloat(answer as string);
+    const numCorrect = parseFloat(activity.correctAnswer as string);
+    return Math.abs(numAnswer - numCorrect) < 0.01;
+  }
+  return answer === activity.correctAnswer;
+}
+
 interface ActivityEngineProps {
   activities: Activity[];
   onComplete: (scores: number[]) => void;
@@ -43,19 +56,7 @@ export function ActivityEngine({ activities, onComplete }: ActivityEngineProps) 
   const handleSubmit = useCallback(() => {
     if (!activity) return;
     const answer = selectedAnswers[activity.id];
-    let isCorrect = false;
-
-    if (activity.type === 'multiple-select' && Array.isArray(answer)) {
-      const correct = activity.correctAnswer as string[];
-      isCorrect = answer.length === correct.length && answer.every((a) => correct.includes(a));
-    } else if (activity.type === 'numeric') {
-      const numAnswer = parseFloat(answer as string);
-      const numCorrect = parseFloat(activity.correctAnswer as string);
-      isCorrect = Math.abs(numAnswer - numCorrect) < 0.01;
-    } else {
-      isCorrect = answer === activity.correctAnswer;
-    }
-
+    const isCorrect = isActivityAnswerCorrect(activity, answer);
     const score = isCorrect ? 100 : 0;
     setScores((prev) => [...prev, score]);
     setSubmitted((prev) => ({ ...prev, [activity.id]: true }));
@@ -87,7 +88,7 @@ export function ActivityEngine({ activities, onComplete }: ActivityEngineProps) 
     );
   }
 
-  const isCorrect = isSubmitted && currentAnswer === activity.correctAnswer;
+  const isCorrect = isSubmitted && isActivityAnswerCorrect(activity, currentAnswer);
 
   return (
     <div className="space-y-4">

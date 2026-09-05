@@ -84,9 +84,14 @@ try:
         plt.savefig(_buf, format='svg', bbox_inches='tight', dpi=100)
         _buf.seek(0)
         _svg = _buf.read().decode('utf-8')
-        plt.close('all')
 except:
     _error_msg = _tb.format_exc()
+finally:
+    try:
+        import matplotlib.pyplot as _plt_cleanup
+        _plt_cleanup.close('all')
+    except Exception:
+        pass
 
 _sys.stdout = _orig_out
 _sys.stderr = _orig_err

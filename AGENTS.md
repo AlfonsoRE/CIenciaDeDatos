@@ -281,7 +281,21 @@ for (const pkg of ['numpy', 'matplotlib', 'pandas', 'scipy', 'scikit-learn']) {
 
 **Solución** en `python-runner.ts`: Agregado `warnings.filterwarnings('ignore')` antes de ejecutar código del usuario.
 
-### Sesión 2026-09-05
+### Sesión 2026-09-05 (continuación) — revisión general de lógica y correctitud
+
+Revisión de lógica/negocio en áreas no auditadas hasta ahora (mastery, progressStore, python-runner, db.ts, ActivityEngine/AssessmentEngine, useLesson) — no repite typos/accesibilidad/responsive, ya cubiertos arriba.
+
+**Encontrado y corregido:**
+- **Bug real en `ActivityEngine.tsx`**: el `isCorrect` usado para pintar el badge "Correcto/Incorrecto" y el panel de feedback (línea ~90) comparaba `currentAnswer === activity.correctAnswer` directo, distinto de la lógica real de calificación en `handleSubmit` (que sí trata `multiple-select` como array y `numeric` con tolerancia). Para **cualquier actividad `multiple-select`** (hay 3 reales: lecciones 2.2, 2.3, 3.1), `array === array` es siempre `false` → el estudiante veía "Incorrecto" y el botón "Intentar de nuevo" aunque hubiera respondido bien; si reintentaba, `handleSubmit` empujaba una segunda entrada a `scores` sin quitar la primera, descuadrando `scores.length` contra `activities.length` y el promedio final. Corregido extrayendo la comparación a una función compartida `isActivityAnswerCorrect()` usada tanto en `handleSubmit` como en el render.
+- **Bug real en `python-runner.ts`**: `plt.close('all')` solo se llamaba dentro de la rama de éxito (`if plt.get_fignums():`). Si el código del usuario generaba una figura y LUEGO lanzaba una excepción, la figura quedaba viva en el intérprete Pyodide persistente (`pyodideInstance` es un singleton de módulo) y aparecía en la salida SVG de la **siguiente** ejecución — incluso de una práctica distinta. Corregido moviendo el cierre de figuras a un `finally` que se ejecuta siempre.
+- **Código frágil en `LessonPlayer.tsx`**: `border-l-${item.color}` (clase Tailwind construida dinámicamente) solo funcionaba porque las 4 clases posibles (`border-l-primary/success/warning/danger`) ya aparecían literalmente en otros archivos, permitiendo que el escáner JIT de Tailwind las generara "por casualidad". Reemplazado por un mapa `ITEM_BORDER_COLOR` explícito — mismo resultado, ya no depende de que otro archivo use la misma clase.
+
+**Reportado sin corregir (requiere decisión de diseño, cambia comportamiento visible):**
+- `LessonPlayer.tsx:118` pasa `attempts: 1` **hardcodeado** a `computeMastery()`, ignorando por completo el contador real `lessons[lessonId].attempts` que sí se persiste en `progressStore.ts` (se incrementa en cada llamada a `updateLessonProgress`, ~4 veces por lección completa). Esto hace que el bono `attemptBonus` de `MASTERY_CONFIG` (hasta +6 puntos por "pocos intentos") se aplique siempre al máximo, para todo mundo, sin medir intentos reales — la mecánica de "menos intentos = mejor puntaje" existe en la fórmula pero está desconectada de cualquier dato real. Conectar el valor real cambiaría los puntajes de dominio mostrados a los estudiantes, por eso no se tocó.
+- El intérprete de Pyodide es un **singleton a nivel de módulo** (`pyodideInstance`) compartido por TODA la sesión de la app, no por lección/práctica. `exec(_decoded)` corre en el namespace global persistente, así que variables definidas en una lección/práctica **sobreviven y contaminan** ejecuciones posteriores en lecciones/prácticas completamente distintas (el botón "Reiniciar" de `CodeLab` solo restaura el texto del editor, no el estado de Python). Es probable que esto sea intencional *dentro* de una misma práctica multi-paso (para que el paso 2 reutilice variables del paso 1), pero no entre lecciones/prácticas distintas — arreglarlo bien requiere namespaces aislados por práctica/lección (cambio de arquitectura, no un fix de una línea), así que se deja para que el usuario decida el alcance.
+- `src/storage/db.ts`: `saveCodeState`/`getCodeState` (y el tipo `CodeState` + tabla Dexie `codeStates`) están completamente implementados pero **nunca se invocan desde ningún componente** — funcionalidad huérfana (mismo patrón que el "tutor muerto" de la sesión 2026-08-26). No se eliminó por si es una feature planeada a medio construir (guardar el código del editor entre visitas); confirmar con el usuario antes de borrar o de terminar de conectarla.
+
+`npm run build` y `npm run lint` pasan sin errores ni warnings nuevos.
 
 #### 1. Proofreading de unidades 4-5 y las 23 prácticas (pendiente #3 de la sesión anterior)
 
@@ -479,7 +493,13 @@ Revisión profesional completa del contenido, la pedagogía y el código (a peti
 
 Los 3 pendientes identificados en la revisión del 2026-09-03 (auditoría de accesibilidad, responsive/mobile, proofreading de unidades 4-5 y las 23 prácticas) se completaron en la sesión 2026-09-05 — ver el historial de esa sesión arriba para el detalle de cada fix. No quedan pendientes activos de esa revisión.
 
+Decisiones de diseño abiertas de la revisión general de lógica (sesión 2026-09-05), sin corregir a propósito por cambiar comportamiento visible o requerir más alcance del que un fix acotado permite — ver el historial de esa sesión arriba para el detalle completo:
+
+1. **`attempts: 1` hardcodeado en `LessonPlayer.tsx:118`** anula el bono por pocos intentos de `computeMastery()` — decidir si conectar el contador real de `progressStore` (cambiaría los puntajes de dominio mostrados) o eliminar el mecanismo de bono si no se quiere esa presión.
+2. **El intérprete de Pyodide es un singleton global de toda la sesión de la app** (no por lección/práctica) — variables de una lección contaminan ejecuciones posteriores de lecciones/prácticas distintas. Arreglarlo requiere namespaces aislados por práctica (cambio de arquitectura).
+3. **`saveCodeState`/`getCodeState` en `db.ts` no se usan en ningún lado** — decidir si es una feature a medio construir que vale la pena terminar (persistir el código del editor entre visitas) o código muerto a eliminar.
+
 Notas abiertas de bajo impacto, sin trabajo pendiente concreto (solo si se toca el área relacionada):
 
-1. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado (sesión 2026-09-03 #9); si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
-2. `useLesson.ts` ya no expone `mastery`/`completedStages`; si algún componente futuro los necesita, re-derivarlos correctamente en vez de restaurar el código viejo que estaba roto.
+4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado (sesión 2026-09-03 #9); si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
+5. `useLesson.ts` ya no expone `mastery`/`completedStages`; si algún componente futuro los necesita, re-derivarlos correctamente en vez de restaurar el código viejo que estaba roto.

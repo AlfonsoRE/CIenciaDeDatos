@@ -18,8 +18,16 @@ import { useProgressStore } from '@/stores/progressStore';
 import { logEvent, savePortfolioEntry } from '@/storage/db';
 import { UNITS_DATA } from '@/content/units';
 import { getDatasetPreview } from '@/content/datasets';
+import { cn } from '@/utils/cn';
 import type { LearningStage } from '@/types/learning';
 import type { Lesson } from '@/types/course';
+
+const ITEM_BORDER_COLOR: Record<string, string> = {
+  primary: 'border-l-2 border-l-primary',
+  success: 'border-l-2 border-l-success',
+  warning: 'border-l-2 border-l-warning',
+  danger: 'border-l-2 border-l-danger',
+};
 
 const STAGES: { key: LearningStage; label: string; icon: React.ComponentType<{ size?: number }> }[] = [
   { key: 'theory', label: 'Teoría', icon: BookOpen },
@@ -238,7 +246,7 @@ export function LessonPlayer() {
                   {lesson.visualExamples[0].items && lesson.visualExamples[0].items!.length > 0 ? (
                     <div className="grid grid-cols-2 gap-3 text-xs text-text-secondary">
                       {lesson.visualExamples[0].items!.map((item, idx) => (
-                        <div key={idx} className={`bg-surface rounded-lg p-3 border border-border ${item.color ? `border-l-2 border-l-${item.color}` : ''}`}>
+                        <div key={idx} className={cn('bg-surface rounded-lg p-3 border border-border', item.color && ITEM_BORDER_COLOR[item.color])}>
                           <p className="font-medium text-text mb-1">{item.label}</p>
                           <p>{item.detail}</p>
                         </div>
