@@ -47,26 +47,30 @@ export function PracticeLab() {
           </h2>
           <div className="space-y-2">
             {PRACTICES.filter((p) => p.unit === unitNum).map((practice) => (
-              <Card key={practice.id} variant="elevated" padding="md" className="hover:border-primary/30 transition-all cursor-pointer" onClick={() => navigate(`/laboratorio/${practice.id}`)}>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <practice.icon size={20} className="text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-text-secondary font-mono">P{practice.number}</span>
-                      <h3 className="text-sm font-medium text-text truncate">{practice.title}</h3>
+              <Card key={practice.id} variant="elevated" padding="md">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <practice.icon size={20} className="text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-text-secondary font-mono">P{practice.number}</span>
+                        <h3 className="text-sm font-medium text-text truncate">{practice.title}</h3>
+                      </div>
                     </div>
                   </div>
-                  <Badge
-                    variant={practice.language === 'both' ? 'info' : practice.language === 'python' ? 'success' : 'warning'}
-                    title={practice.language === 'both' ? 'Se ejecuta Python; R se compara solo en teoría' : undefined}
-                  >
-                    {practice.language === 'both' ? 'Python + R (teoría)' : practice.language === 'python' ? 'Python' : 'R'}
-                  </Badge>
-                  <Button size="sm" variant="secondary" onClick={() => navigate(`/laboratorio/${practice.id}`)}>
-                    Iniciar
-                  </Button>
+                  <div className="flex items-center gap-2 justify-end shrink-0">
+                    <Badge
+                      variant={practice.language === 'both' ? 'info' : practice.language === 'python' ? 'success' : 'warning'}
+                      title={practice.language === 'both' ? 'Se ejecuta Python; R se compara solo en teoría' : undefined}
+                    >
+                      {practice.language === 'both' ? 'Python + R (teoría)' : practice.language === 'python' ? 'Python' : 'R'}
+                    </Badge>
+                    <Button size="sm" variant="secondary" onClick={() => navigate(`/laboratorio/${practice.id}`)}>
+                      Iniciar
+                    </Button>
+                  </div>
                 </div>
               </Card>
             ))}

@@ -341,6 +341,18 @@ Matemática de preguntas `numeric` (4.2-a1, 4.2-q1) verificada manualmente — c
 
 Contrastes verificados con la fórmula de luminancia relativa WCAG (script Node ad-hoc), no solo visualmente. `npm run build`/`lint` sin warnings nuevos.
 
+#### 5. Verificación visual real de responsive (cierre del pendiente #2)
+
+**Cómo se logró**: `resize_window` no funciona en este entorno — reporta éxito pero `window.innerWidth` sigue reportando el tamaño real de pantalla (confirmado con `javascript_tool`). Solución alternativa: inyectar un `<iframe>` con `width`/`height` fijos (390×844, tamaño móvil) apuntando a `localhost`, ya que un iframe sí tiene su propio viewport real para media queries CSS — a diferencia de la ventana del navegador, esto sí dispara los breakpoints `sm:`/`md:` de Tailwind de verdad.
+
+**Verificado sin problemas** (navegando dentro del iframe): Dashboard, menú "Más" (Portafolio/Configuración — confirma el fix de la sesión anterior), CourseMap, LessonPlayer (stepper de etapas), CodeLab (tabs Instrucciones/Código/Resultado se apilan, sin overlap), ProgressView.
+
+**Encontrado y corregido**: `PracticeLab.tsx` — la fila de cada práctica (ícono + `P{n}` + título + badge de lenguaje + botón "Iniciar") no tenía breakpoint responsive; a 390px de ancho el título quedaba truncado a 3-4 caracteres ("In...", "C...") por falta de espacio, prácticamente ilegible. Solución: `flex-col` en móvil (ícono+título en su fila, badge+botón debajo) y `sm:flex-row` para el layout original en pantallas ≥640px.
+
+**Bonus — bug de accesibilidad no detectado por la auditoría anterior**: el mismo `Card` en `PracticeLab.tsx` tenía `onClick` de navegación en un `<div>` (vía el componente `Card`, que solo renderiza un `<div>` sin agregar `role`/`tabIndex`/manejo de teclado) — inaccesible por teclado. El grep de la auditoría anterior solo buscaba el patrón literal `<div onClick=` y no detectó este caso porque `onClick` se pasaba como prop a un componente (`<Card onClick={...}>`). Es el único caso de este patrón en todo el código (verificado con grep). Solución: eliminado el `onClick`/`cursor-pointer` del `Card` (redundante, ya existe el botón "Iniciar" accesible dentro) en vez de agregar `role="button"` — evita anidar un elemento interactivo falso alrededor de un `<button>` real.
+
+**Nota para futuras sesiones**: si se agrega alguna otra tarjeta clickeable completa (patrón `<Card onClick={...}>`), usar un `<button>`/`<a>` real como contenedor en vez de un `<div>`, o agregar `role="button" tabIndex={0}` + `onKeyDown` — el componente `Card` no lo hace automáticamente.
+
 ### Sesión 2026-09-03
 
 Revisión profesional completa del contenido, la pedagogía y el código (a petición del usuario, "como un maestro de ciencia de datos"), seguida de corrección iterativa de todo lo encontrado. Todos los cambios se verificaron manualmente en navegador (no solo `tsc`/`lint`) antes de cada commit. 9 commits en esta sesión.
@@ -464,7 +476,7 @@ Revisión profesional completa del contenido, la pedagogía y el código (a peti
 Identificados en la revisión del 2026-09-03 pero no abordados aún (el usuario pausó aquí):
 
 1. ~~**Auditoría de accesibilidad**~~ — completada en la sesión 2026-09-05 (ver historial arriba): `aria-label`s faltantes y disclosure widgets corregidos, y contraste de `text-success`/`text-warning` corregido (ver sección #12 del historial).
-2. ~~**Responsive / mobile**~~ — completada en la sesión 2026-09-05 (ver historial arriba), pero solo con revisión estática de código: la automatización de navegador no pudo cambiar el viewport en este entorno. Se corrigió un bug real (Portafolio inalcanzable en móvil) y un riesgo de overflow en `CodeLab`. Queda pendiente una verificación visual real (DevTools en modo dispositivo o dispositivo físico) para confirmar que no hay más casos no detectables por lectura de código.
+2. ~~**Responsive / mobile**~~ — completada en la sesión 2026-09-05 (ver historial arriba): bug de Portafolio inalcanzable en móvil, overflow en `CodeLab`, y verificación visual real lograda con el truco del iframe (`resize_window` no funciona en este entorno) — encontrado y corregido título truncado ilegible en `PracticeLab.tsx` en móvil, más un bug de accesibilidad (div-onClick sin rol/teclado) que la auditoría anterior no detectó.
 3. ~~**Proofreading del resto del contenido**~~ — completado en la sesión 2026-09-05 (ver historial arriba): unidades 4-5 y las 23 prácticas revisadas línea por línea.
 4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado; si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
 5. Cosas mencionadas pero descartadas por bajo impacto: `useLesson.ts` ya no expone `mastery`/`completedStages` (si algún componente futuro los necesita, hay que re-derivarlos correctamente, no restaurar el código viejo que estaba roto).
