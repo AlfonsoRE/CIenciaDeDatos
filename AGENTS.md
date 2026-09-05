@@ -471,12 +471,15 @@ Revisión profesional completa del contenido, la pedagogía y el código (a peti
 
 16. **Al escribir explicaciones con desarrollo matemático** (ej. `explanation` de preguntas `numeric`), verificar que el cálculo mostrado realmente llegue al `correctAnswer` — se encontró un caso (lesson-2-2 q5) donde el resultado final era correcto pero el desarrollo intermedio no cuadraba.
 
+17. **El componente `Card` (`components/ui/Card.tsx`) es un `<div>` plano** — pasarle `onClick` (patrón `<Card onClick={...}>`) lo hace clickeable con mouse pero NO accesible por teclado (sin `role`, `tabIndex` ni `onKeyDown`). Si ya existe un botón/enlace real dentro del `Card` para la misma acción (patrón común: card + botón "Iniciar"/"Ver más"), lo correcto es quitar el `onClick` del `Card` en vez de agregarle `role="button"` (evita anidar un elemento interactivo falso alrededor de uno real). Si se necesita que toda la tarjeta sea clickeable sin un botón interno, usar un `<button>`/`<a>` real como contenedor. Este patrón se coló sin detectar en la auditoría de accesibilidad de la sesión 2026-09-05 porque el grep de esa auditoría solo buscaba `<div onClick=` literal, no `<Card onClick={...}>` — si se repite una auditoría, buscar también componentes de layout (`Card`, etc.) usados con `onClick`.
+
+18. **`resize_window` (herramienta de automatización de navegador) no funciona en este entorno de desarrollo**: reporta éxito pero `window.innerWidth` sigue devolviendo el tamaño real de pantalla (confirmado con `javascript_tool`), por lo que el layout nunca cambia a la vista móvil. Para probar responsive de verdad sin acceso a DevTools manual, inyectar un `<iframe>` con `width`/`height` fijos (ej. 390×844) apuntando a la misma URL vía `javascript_tool` — un iframe sí tiene su propio viewport real y dispara los media queries CSS correctamente. Tomar el screenshot con el tab normal (no `zoom`, que usa un sistema de coordenadas distinto al de la ventana real).
+
 ## Pendientes para la próxima sesión
 
-Identificados en la revisión del 2026-09-03 pero no abordados aún (el usuario pausó aquí):
+Los 3 pendientes identificados en la revisión del 2026-09-03 (auditoría de accesibilidad, responsive/mobile, proofreading de unidades 4-5 y las 23 prácticas) se completaron en la sesión 2026-09-05 — ver el historial de esa sesión arriba para el detalle de cada fix. No quedan pendientes activos de esa revisión.
 
-1. ~~**Auditoría de accesibilidad**~~ — completada en la sesión 2026-09-05 (ver historial arriba): `aria-label`s faltantes y disclosure widgets corregidos, y contraste de `text-success`/`text-warning` corregido (ver sección #12 del historial).
-2. ~~**Responsive / mobile**~~ — completada en la sesión 2026-09-05 (ver historial arriba): bug de Portafolio inalcanzable en móvil, overflow en `CodeLab`, y verificación visual real lograda con el truco del iframe (`resize_window` no funciona en este entorno) — encontrado y corregido título truncado ilegible en `PracticeLab.tsx` en móvil, más un bug de accesibilidad (div-onClick sin rol/teclado) que la auditoría anterior no detectó.
-3. ~~**Proofreading del resto del contenido**~~ — completado en la sesión 2026-09-05 (ver historial arriba): unidades 4-5 y las 23 prácticas revisadas línea por línea.
-4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado; si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
-5. Cosas mencionadas pero descartadas por bajo impacto: `useLesson.ts` ya no expone `mastery`/`completedStages` (si algún componente futuro los necesita, hay que re-derivarlos correctamente, no restaurar el código viejo que estaba roto).
+Notas abiertas de bajo impacto, sin trabajo pendiente concreto (solo si se toca el área relacionada):
+
+1. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado (sesión 2026-09-03 #9); si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
+2. `useLesson.ts` ya no expone `mastery`/`completedStages`; si algún componente futuro los necesita, re-derivarlos correctamente en vez de restaurar el código viejo que estaba roto.
