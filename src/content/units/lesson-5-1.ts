@@ -45,8 +45,8 @@ export const LESSON_5_1: Lesson = {
     {
       id: '5.1-v1',
       type: 'chart',
-      title: 'Comparacion de metricas por grupo',
-      description: 'Visualiza como diferentes metricas varian entre grupos demograficos.',
+      title: 'Comparación de métricas por grupo',
+      description: 'Visualiza cómo diferentes métricas varían entre grupos demográficos.',
       chartType: 'bar',
       interactive: false,
       items: [

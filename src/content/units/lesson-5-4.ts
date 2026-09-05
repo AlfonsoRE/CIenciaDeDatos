@@ -39,7 +39,7 @@ export const LESSON_5_4: Lesson = {
       id: '5.4-t4',
       type: 'text',
       title: 'Comunicación de resultados',
-      content: 'El mejor análisis es inútil si no se comunica bien. Principios: conocé tu audiencia, empezá con el hallazgo clave, usá visualizaciones claras, documentá tu código.',
+      content: 'El mejor análisis es inútil si no se comunica bien. Principios: conoce a tu audiencia, empieza con el hallazgo clave, usa visualizaciones claras, documenta tu código.',
     },
   ],
   visualExamples: [
@@ -177,7 +177,7 @@ print(f"\\nMejor modelo: {'Random Forest' if auc_rf > auc_lr else 'Regresión Lo
   challenge: {
     id: '5.4-ch',
     title: 'Proyecto final: Análisis completo',
-    description: 'Selecciona un dataset real, réalizalo EDA completo, limpia, modela y presenta los hallazgos.',
+    description: 'Selecciona un dataset real, realiza un EDA completo, limpia, modela y presenta los hallazgos.',
     language: 'python',
     codeTemplate: `# Proyecto Integrador Final
 # 

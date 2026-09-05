@@ -517,7 +517,7 @@ print(f"Después de dropna(): {len(df_drop)} filas")
 
 # Estrategia 2: Imputar con la media
 df_imputed = df.copy()
-df_imputed['sepal_length'].fillna(df['sepal_length'].mean(), inplace=True)
+df_imputed['sepal_length'] = df_imputed['sepal_length'].fillna(df['sepal_length'].mean())
 print(f"Después de imputar media: {df_imputed['sepal_length'].isnull().sum()} nulos")`,
         explanation: 'Los valores faltantes son comunes en datos reales. Las estrategias incluyen eliminación, imputación con media/mediana/moda, o modelos de imputación.',
         hints: ['.isnull().sum() cuenta nulos por columna', '.fillna() reemplaza nulos']
@@ -814,7 +814,7 @@ n = 200
 
 # Datos: predecir si un estudiante aprueba (1) o no (0)
 estudio_horas = np.random.uniform(0, 10, n)
-aprobado = (estudio_horas > 5).astype(int) + np.random.binomial(0, 0.1, n)
+aprobado = (estudio_horas > 5).astype(int) + np.random.binomial(1, 0.1, n)
 aprobado = np.clip(aprobado, 0, 1)
 
 X = estudio_horas.reshape(-1, 1)
@@ -1165,7 +1165,7 @@ reviews = [
 print("=== Análisis de Sentimiento ===")
 for review in reviews:
     sentimiento, score = analizar_sentimiento(review)
-    print(f"Texto: \"{review}\"")
+    print(f'Texto: "{review}"')
     print(f"→ {sentimiento} (score: {score:.2f})")`,
         explanation: 'El análisis de sentimiento clasifica texto como positivo, negativo o neutral. El enfoque basado en léxico es simple pero efectivo para análisis básico.',
         hints: ['Intersección de conjuntos identifica palabras coincidentes']

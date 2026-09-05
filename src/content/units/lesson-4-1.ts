@@ -58,8 +58,8 @@ export const LESSON_4_1: Lesson = {
     {
       id: '4.1-v1',
       type: 'diagram',
-      title: 'Mapa de decision de algoritmos',
-      description: 'Arbol de decision para elegir el algoritmo correcto segun el tipo de problema.',
+      title: 'Mapa de decisión de algoritmos',
+      description: 'Árbol de decisión para elegir el algoritmo correcto según el tipo de problema.',
       interactive: false,
       items: [
         { label: 'Supervisado', detail: 'Datos etiquetados: clasificación (spam/no spam) o regresión (precio).', color: 'primary' },

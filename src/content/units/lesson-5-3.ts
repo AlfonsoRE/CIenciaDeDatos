@@ -46,7 +46,7 @@ export const LESSON_5_3: Lesson = {
     {
       id: '5.3-v1',
       type: 'chart',
-      title: 'Matriz de confusion clinica',
+      title: 'Matriz de confusión clínica',
       description: 'Visualiza verdaderos positivos, falsos negativos y su impacto.',
       chartType: 'heatmap',
       interactive: false,
@@ -243,7 +243,7 @@ df = pd.DataFrame({
           { id: 'd', text: 'Usar instrumentos de precisión' },
         ],
         correctAnswer: 'b',
-        explanation: 'La medicina de precisión tailora tratamientos a las características individuales del paciente.',
+        explanation: 'La medicina de precisión adapta los tratamientos a las características individuales del paciente.',
         conceptLinked: 'Medicina de precisión',
         difficulty: 'easy',
       },

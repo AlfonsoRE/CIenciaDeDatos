@@ -39,7 +39,7 @@ export const LESSON_5_2: Lesson = {
       id: '5.2-t5',
       type: 'formula',
       title: 'Privacidad diferencial',
-      content: 'Mecanismo que agrega ruido controlado para proteger individuos while manteniendo utilidad estadística.',
+      content: 'Mecanismo que agrega ruido controlado para proteger individuos mientras mantiene utilidad estadística.',
       formula: 'ε-differential privacy: P(M(D) ∈ S) ≤ e^ε · P(M(D\') ∈ S)',
     },
   ],
@@ -47,8 +47,8 @@ export const LESSON_5_2: Lesson = {
     {
       id: '5.2-v1',
       type: 'diagram',
-      title: 'Tecnicas de anonimizacion',
-      description: 'Diagrama de las diferentes tecnicas y cuando usarlas.',
+      title: 'Técnicas de anonimización',
+      description: 'Diagrama de las diferentes técnicas y cuándo usarlas.',
       interactive: false,
       items: [
         { label: 'K-Anonimidad', detail: 'Cada registro es indistinguible de al menos k-1 otros.', color: 'primary' },

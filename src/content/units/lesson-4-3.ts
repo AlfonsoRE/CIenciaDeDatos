@@ -46,8 +46,8 @@ export const LESSON_4_3: Lesson = {
     {
       id: '4.3-v1',
       type: 'chart',
-      title: 'Arbol de decision visual',
-      description: 'Visualiza las divisiones del arbol y como clasifica las regiones.',
+      title: 'Árbol de decisión visual',
+      description: 'Visualiza las divisiones del árbol y cómo clasifica las regiones.',
       chartType: 'tree',
       interactive: false,
       items: [
