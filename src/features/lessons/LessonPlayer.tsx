@@ -160,6 +160,8 @@ export function LessonPlayer() {
               key={stage.key}
               onClick={() => handleStageClick(stage.key)}
               disabled={isLocked}
+              aria-label={stage.label}
+              aria-current={isCurrent ? 'step' : undefined}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
                 isCurrent ? 'bg-primary text-white shadow-sm' : isCompleted ? 'bg-success/10 text-success' : isLocked ? 'bg-surface-alt/50 text-text-secondary/40 cursor-not-allowed' : 'bg-surface-alt text-text-secondary hover:bg-border/50'
               }`}

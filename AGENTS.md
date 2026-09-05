@@ -300,6 +300,23 @@ Matemática de preguntas `numeric` (4.2-a1, 4.2-q1) verificada manualmente — c
 
 **Nota para futuras sesiones**: el patrón `\"` dentro de template literals de JS que envuelven código Python es una fuente de bugs silenciosos — no se detecta en build/lint porque es sintácticamente válido TypeScript, solo falla en tiempo de ejecución dentro de Pyodide. Si se agrega código Python con comillas dobles literales, preferir comillas simples en el f-string de Python antes que escapar comillas dobles.
 
+#### 2. Auditoría de accesibilidad (pendiente #1 de la sesión anterior)
+
+**Revisado**: todos los componentes de `src/components/` y `src/features/` (botones, inputs, navegación), `globals.css` (contraste de color de los tokens de tema), y ausencia de modales/diálogos en la app.
+
+**Encontrado y corregido**:
+- `LessonPlayer.tsx` y `PracticePlayer.tsx`: los botones de navegación de etapas/pasos ocultan su texto (`hidden sm:inline`) por debajo del breakpoint `sm`, quedando solo con un ícono y **sin `aria-label`** — un lector de pantalla en móvil no anunciaba nada útil. Agregado `aria-label` (con el nombre de la etapa / "Paso N") y `aria-current="step"` en el ítem activo.
+- `CodeLab.tsx`: el botón de alternar tema del editor solo mostraba un emoji (☀️/🌙) sin texto ni `aria-label`. Agregado `aria-label` descriptivo.
+- `ActivityEngine.tsx`: los botones de opción (multiple-choice/select) no exponían el estado de selección a tecnología asistiva → agregado `aria-pressed`. El input de respuesta numérica tenía un `<label>` visual sin asociar (`htmlFor`/`id` faltantes) → asociados.
+- `AssessmentEngine.tsx`: mismo fix de `aria-pressed` en opciones; el input numérico de evaluación no tenía `<label>` ni `aria-label`, solo un `placeholder` (que desaparece al escribir y no es un sustituto válido de etiqueta) → agregado `aria-label`.
+- `HintSystem.tsx`: el botón que expande/colapsa el panel de pistas (patrón disclosure) no exponía `aria-expanded` → agregado.
+
+**Verificado, sin cambios necesarios**: no hay elementos `<div>`/`<span>` con `onClick` sin rol/teclado (todo interactivo usa `<button>`/`<a>` nativos); no hay `<img>` sin `alt`; `:focus-visible` global ya definido en `globals.css` con anillo visible; `ProgressBar` ya usa `role="progressbar"` + `aria-valuenow/min/max`; no existen modales/diálogos en la app (nada que gestionar con foco atrapado/Escape).
+
+**Hallazgo NO corregido (requiere decisión de diseño)**: los colores semánticos `--color-success` (#16A34A) y `--color-warning` (#F59E0B) — usados como `text-success`/`text-warning` en `Badge`, estados de dominio, checkmarks, etc. — no cumplen contraste WCAG AA (4.5:1) como texto sobre fondos claros en modo claro: `success` da ~3.29:1 y `warning` ~2.15:1 contra blanco (en modo oscuro sí cumplen, ≥6.8:1, porque el fondo es oscuro). Corregirlo requeriría oscurecer estos dos tokens específicamente para su uso como texto en modo claro (o separar variantes `-text` de las variantes `-bg`), lo cual cambia la paleta de marca visible en toda la app — se deja pendiente para que el usuario decida el tono exacto.
+
+`npm run build` y `npm run lint` pasan sin errores nuevos tras los cambios (los warnings preexistentes de `AssessmentEngine.tsx`/`LessonPlayer.tsx` sobre `Math.random`/memoización no están relacionados).
+
 ### Sesión 2026-09-03
 
 Revisión profesional completa del contenido, la pedagogía y el código (a petición del usuario, "como un maestro de ciencia de datos"), seguida de corrección iterativa de todo lo encontrado. Todos los cambios se verificaron manualmente en navegador (no solo `tsc`/`lint`) antes de cada commit. 9 commits en esta sesión.
@@ -422,7 +439,7 @@ Revisión profesional completa del contenido, la pedagogía y el código (a peti
 
 Identificados en la revisión del 2026-09-03 pero no abordados aún (el usuario pausó aquí):
 
-1. **Auditoría de accesibilidad**: contraste de color, `aria-label`s faltantes, navegación por teclado. No se hizo una pasada dedicada.
+1. ~~**Auditoría de accesibilidad**~~ — completada en la sesión 2026-09-05 (ver historial arriba): `aria-label`s faltantes y disclosure widgets corregidos. Queda pendiente el contraste de `text-success`/`text-warning` en modo claro (decisión de diseño, ver nota en el historial).
 2. **Responsive / mobile**: no se probó la app en viewport angosto (el layout usa Tailwind con breakpoints `sm:`/`md:`, pero no se verificó visualmente en pantallas pequeñas).
 3. ~~**Proofreading del resto del contenido**~~ — completado en la sesión 2026-09-05 (ver historial arriba): unidades 4-5 y las 23 prácticas revisadas línea por línea.
 4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado; si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).

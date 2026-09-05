@@ -31,6 +31,7 @@ export function HintSystem({ hints, onHintUsed, maxVisible = 3 }: HintSystemProp
     <Card padding="md" className="border-l-4 border-l-warning">
       <button
         onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
         className="flex items-center gap-2 w-full text-left"
       >
         <Lightbulb size={16} className="text-warning shrink-0" />

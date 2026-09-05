@@ -131,6 +131,7 @@ export function ActivityEngine({ activities, onComplete }: ActivityEngineProps) 
                     }
                   }}
                   disabled={isSubmitted}
+                  aria-pressed={isSelected}
                   className={cn(
                     'w-full text-left p-3 rounded-xl border text-sm transition-all',
                     !showResult && isSelected && 'border-primary bg-primary/5 text-primary',
@@ -154,8 +155,9 @@ export function ActivityEngine({ activities, onComplete }: ActivityEngineProps) 
 
         {activity.type === 'numeric' && (
           <div>
-            <label className="text-sm text-text-secondary mb-1 block">Tu respuesta:</label>
+            <label htmlFor={`numeric-${activity.id}`} className="text-sm text-text-secondary mb-1 block">Tu respuesta:</label>
             <input
+              id={`numeric-${activity.id}`}
               type="number"
               step="any"
               value={(currentAnswer as string) || ''}

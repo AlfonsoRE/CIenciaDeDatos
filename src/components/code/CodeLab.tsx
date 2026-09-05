@@ -159,7 +159,12 @@ export function CodeLab({
                 {copied ? 'Copiado' : 'Copiar'}
               </Button>
               <div className="flex-1" />
-              <Button size="sm" variant="ghost" onClick={() => setIsDark(!isDark)}>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsDark(!isDark)}
+                aria-label={isDark ? 'Cambiar editor a tema claro' : 'Cambiar editor a tema oscuro'}
+              >
                 {isDark ? '☀️' : '🌙'}
               </Button>
             </div>

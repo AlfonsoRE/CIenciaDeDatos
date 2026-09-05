@@ -163,6 +163,7 @@ export function AssessmentEngine({ questions, passingScore, onComplete }: Assess
                   key={opt.id}
                   onClick={() => handleAnswer(opt.id)}
                   disabled={submitted}
+                  aria-pressed={isSelected}
                   className={cn(
                     'w-full text-left p-3 rounded-xl border text-sm transition-all',
                     !submitted && isSelected && 'border-primary bg-primary/5 text-primary',
@@ -200,6 +201,7 @@ export function AssessmentEngine({ questions, passingScore, onComplete }: Assess
               handleAnswer(e.target.value);
             }}
             disabled={submitted}
+            aria-label="Tu respuesta numérica"
             className="w-full h-10 px-3 rounded-[var(--radius-input)] border border-border bg-surface text-text text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             placeholder="Tu respuesta numérica"
           />
