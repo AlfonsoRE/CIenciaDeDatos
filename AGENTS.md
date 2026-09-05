@@ -281,6 +281,25 @@ for (const pkg of ['numpy', 'matplotlib', 'pandas', 'scipy', 'scikit-learn']) {
 
 **Solución** en `python-runner.ts`: Agregado `warnings.filterwarnings('ignore')` antes de ejecutar código del usuario.
 
+### Sesión 2026-09-05
+
+#### 1. Proofreading de unidades 4-5 y las 23 prácticas (pendiente #3 de la sesión anterior)
+
+**Revisado**: lecciones 4.1-5.4 línea por línea (teoría, actividades, hints, evaluación) y `practices/index.ts` completo (1306 líneas).
+
+**Encontrado y corregido**:
+- Faltas de acentuación en `title`/`description` de varios `visualExamples` (ej. "Arbol de decision", "Comparacion de metricas", "Tecnicas de anonimizacion").
+- Anglicismo "while manteniendo" en lesson-5-2 (formula de privacidad diferencial) y "tailora" en lesson-5-3 (explicación de medicina de precisión).
+- Voseo argentino ("conocé", "usá", "documentá") en lesson-5-4, inconsistente con el tuteo neutro usado en el resto del curso.
+- Typo "réalizalo EDA completo" en el challenge de lesson-5-4.
+- **Bug real** en `practices/index.ts` p9-s1: `df_imputed['sepal_length'].fillna(..., inplace=True)` es una asignación encadenada que no persiste con Copy-on-Write en pandas moderno — corregido a asignación directa.
+- **Bug real** en p14-s2: `np.random.binomial(0, 0.1, n)` es código muerto (0 ensayos siempre da 0, el "ruido" nunca se aplicaba) — corregido a `binomial(1, 0.1, n)`.
+- **Bug de sintaxis Python** en p21-s1: `print(f"Texto: \"{review}\"")` — el `\"` dentro de un template literal de JS se evalúa como `"` (el backslash se descarta), dejando en runtime `f"Texto: "{review}""`, que es `SyntaxError` en Python. Corregido usando comillas simples en el f-string (`f'Texto: "{review}"'`) para evitar el escapado anidado.
+
+Matemática de preguntas `numeric` (4.2-a1, 4.2-q1) verificada manualmente — correcta. `npm run build` y `npm run lint` pasan sin errores tras los cambios.
+
+**Nota para futuras sesiones**: el patrón `\"` dentro de template literals de JS que envuelven código Python es una fuente de bugs silenciosos — no se detecta en build/lint porque es sintácticamente válido TypeScript, solo falla en tiempo de ejecución dentro de Pyodide. Si se agrega código Python con comillas dobles literales, preferir comillas simples en el f-string de Python antes que escapar comillas dobles.
+
 ### Sesión 2026-09-03
 
 Revisión profesional completa del contenido, la pedagogía y el código (a petición del usuario, "como un maestro de ciencia de datos"), seguida de corrección iterativa de todo lo encontrado. Todos los cambios se verificaron manualmente en navegador (no solo `tsc`/`lint`) antes de cada commit. 9 commits en esta sesión.
@@ -405,6 +424,6 @@ Identificados en la revisión del 2026-09-03 pero no abordados aún (el usuario 
 
 1. **Auditoría de accesibilidad**: contraste de color, `aria-label`s faltantes, navegación por teclado. No se hizo una pasada dedicada.
 2. **Responsive / mobile**: no se probó la app en viewport angosto (el layout usa Tailwind con breakpoints `sm:`/`md:`, pero no se verificó visualmente en pantallas pequeñas).
-3. **Proofreading del resto del contenido**: se auditaron a fondo las preguntas numéricas (14/14 verificadas matemáticamente) y se escaneó todo el contenido por mojibake/typos comunes, pero no se leyó línea por línea el detalle pedagógico de las 23 prácticas ni de las lecciones de unidades 4-5 con el mismo nivel que unidades 1-3.
+3. ~~**Proofreading del resto del contenido**~~ — completado en la sesión 2026-09-05 (ver historial arriba): unidades 4-5 y las 23 prácticas revisadas línea por línea.
 4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado; si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
 5. Cosas mencionadas pero descartadas por bajo impacto: `useLesson.ts` ya no expone `mastery`/`completedStages` (si algún componente futuro los necesita, hay que re-derivarlos correctamente, no restaurar el código viejo que estaba roto).
