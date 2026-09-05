@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronRight, CheckCircle2, Circle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { useProgressStore } from '@/stores/progressStore';
@@ -52,6 +52,11 @@ export function CourseMap() {
                         }`}
                       >
                         <div className="flex items-center gap-2">
+                          {progress?.completed ? (
+                            <CheckCircle2 size={16} className="text-success shrink-0" />
+                          ) : (
+                            <Circle size={16} className="text-border shrink-0" />
+                          )}
                           <span className="text-xs text-text-secondary font-mono">{lesson.code}</span>
                           <span className="text-sm text-text truncate">{lesson.title}</span>
                         </div>

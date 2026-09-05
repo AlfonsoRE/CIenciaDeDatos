@@ -316,9 +316,19 @@ El usuario va a subir este proyecto (frontend puro, sin backend) al repositorio 
 - Pyodide se carga en runtime desde `cdn.jsdelivr.net` (`python-runner.ts`, versión fijada `v314.0.5`) sin Subresource Integrity — no aplica SRI clásico porque se carga vía `import()` dinámico de un `.mjs`, no un `<script src>` con atributo `integrity`. El riesgo real es bajo (versión fijada e inmutable en jsdelivr, no `latest`), pero si se quiere eliminar la dependencia de un tercero en runtime por completo, la alternativa es auto-hospedar los assets de Pyodide en `public/` y servirlos desde el mismo origen.
 
 **Pendiente de una decisión del usuario (no se pudo resolver sin esa información):**
-- El plugin PWA (`vite-plugin-pwa`) registra un service worker con scope por defecto `/` (no hay `base` configurado en `vite.config.ts`). Si el proyecto se despliega en la **raíz** de un dominio/subdominio propio, esto es correcto y no hay riesgo. Pero si se despliega bajo una **subruta de un dominio institucional compartido** (ej. `tec.mx/alumnos/cienciadatos/`) sin ajustar `base`, el build generaría rutas de assets rotas y, más importante, el service worker generado podría intentar registrarse con un scope más amplio del que le corresponde — hay que preguntarle al usuario dónde exactamente se va a desplegar (raíz propia vs. subruta de un sitio compartido) antes de que sea un problema real, y si es subruta, configurar `base: '/subruta/'` en `vite.config.ts` (esto ajusta automáticamente `start_url`/scope del manifest y del SW vía `vite-plugin-pwa`).
+- El plugin PWA (`vite-plugin-pwa`) registra un service worker con scope por defecto `/` (no hay `base` configurado en `vite.config.ts`). Si el proyecto se despliega en la **raíz** de un dominio/subdominio propio, esto es correcto y no hay riesgo. Pero si se despliega bajo una **subruta de un dominio institucional compartido** (ej. `tec.mx/alumnos/cienciadatos/`) sin ajustar `base`, el build generaría rutas de assets rotas y, más importante, el service worker generado podría intentar registrarse con un scope más amplio del que le corresponde. Preguntado al usuario el 2026-09-05: **todavía no sabe dónde se desplegará**. Queda como pendiente real — retomar cuando se sepa la ruta de despliegue, y si es subruta compartida, configurar `base: '/subruta/'` en `vite.config.ts` (ajusta automáticamente `start_url`/scope del manifest y del SW vía `vite-plugin-pwa`).
 
 `npm run build` y `npm run lint` pasan sin errores tras los cambios.
+
+### Sesión 2026-09-05 (continuación 4) — progreso invisible en CourseMap
+
+**Reportado por el usuario**: en `/curso` (nav "Curso"), las lecciones ya completadas aparecían como si no se hubieran cursado; entrando a la misma unidad desde "Inicio" (`/curso/unidad/:unitNumber`, `UnitView.tsx`) sí se veía el avance correctamente.
+
+**Causa**: no era un bug de datos — `CourseMap.tsx` y `UnitView.tsx` leen exactamente el mismo store (`lessons[lesson.id]?.completed` de `progressStore`). El problema era puramente visual: en `CourseMap.tsx`, la tarjeta de cada lección completada solo cambiaba el `variant` del `Card` (`outlined` → `default`) y agregaba un tinte `bg-success/5` (5% de opacidad) — sin ningún ícono. Esa diferencia es casi imperceptible a simple vista, a diferencia de `UnitView.tsx` que sí muestra un `CheckCircle2` verde explícito.
+
+**Solución**: agregado el mismo patrón de ícono (`CheckCircle2`/`Circle` de lucide-react, según `progress?.completed`) a las tarjetas de lección de `CourseMap.tsx`. Verificado visualmente sembrando un dato de prueba en `localStorage['cd-progress']` (clave del `persist` de Zustand) para simular una lección completada — ambas vistas ahora muestran el mismo indicador.
+
+**Nota para futuras sesiones**: si un usuario reporta "el progreso no se guardó" en una vista pero SÍ aparece en otra, revisar primero si ambas vistas leen la misma fuente de datos (`progressStore`) antes de asumir un bug de persistencia — puede ser, como aquí, una diferencia puramente visual entre dos componentes que muestran el mismo estado de formas distintas.
 
 #### 1. Proofreading de unidades 4-5 y las 23 prácticas (pendiente #3 de la sesión anterior)
 
