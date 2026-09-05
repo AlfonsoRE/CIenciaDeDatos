@@ -297,6 +297,29 @@ Revisión de lógica/negocio en áreas no auditadas hasta ahora (mastery, progre
 
 `npm run build` y `npm run lint` pasan sin errores ni warnings nuevos.
 
+### Sesión 2026-09-05 (continuación 3) — auditoría de seguridad previa a subir el repo al Tec
+
+El usuario va a subir este proyecto (frontend puro, sin backend) al repositorio del Tecnológico y quería asegurarse de que no pudiera usarse como vector de ataque contra el sitio institucional. Revisión enfocada en XSS, supply chain, secretos y configuración de despliegue — no repite lógica de negocio (ver sección anterior) ni contenido/accesibilidad/responsive (ver secciones previas).
+
+**Encontrado y corregido:**
+- **XSS potencial en `CodeLab.tsx`**: la gráfica generada por `matplotlib` (vía Pyodide) se inyectaba con `dangerouslySetInnerHTML={{ __html: output.svgOutput }}`. El SVG lo produce `matplotlib.pyplot.savefig(format='svg')` a partir del código Python que el propio estudiante escribe y ejecuta — normalmente matplotlib escapa el texto correctamente, pero confiar en que una librería externa nunca tenga un bug de escapado (o en que un `title`/label con contenido especial no rompa el escapado) es frágil, y un `<svg onload=...>` inyectado así SÍ se ejecuta en el origen del sitio (los navegadores no ejecutan `<script>` inyectado vía `innerHTML`, pero sí atributos de evento como `onload`/`onerror`). Como el intérprete Pyodide es un singleton de toda la sesión (ver hallazgo de la revisión anterior), y como este es exactamente el tipo de vector que preocupa si el proyecto queda bajo el dominio del Tec (self-XSS que podría escalar si alguien comparte/pega código de otra persona). **Solución**: reemplazado por `<img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}">` — un SVG cargado como recurso de imagen nunca ejecuta scripts ni atributos de evento, sin importar su contenido (garantía de la especificación, no del escapado de matplotlib). Verificado visualmente que las gráficas se siguen viendo igual.
+- **Vulnerabilidad conocida en dependencia de desarrollo**: `npm audit` reportó `fast-uri` (transitiva, alta severidad, SSRF/host-confusion) — solo se usa en el toolchain de build, nunca se envía al navegador, pero se corrigió igual con `npm audit fix` (sin cambios de versión mayor). `npm audit` queda en 0 vulnerabilidades.
+
+**Verificado sin problemas:**
+- Sin `eval`, `new Function`, `document.write` ni otros `innerHTML =` en todo `src/`.
+- Sin `postMessage`, `window.open` ni llamadas `fetch`/`XMLHttpRequest` a servicios externos (la app no llama a ningún backend propio ni de terceros en runtime, aparte de la descarga de Pyodide).
+- Sin secretos, API keys, tokens ni archivos `.env` en el repo (`git ls-files` + grep de patrones comunes).
+- Sin workflows de CI/CD (`.github/workflows`) que pudieran exponer secretos o ejecutarse con permisos amplios.
+- `index.html` sin scripts inline ni referencias a hosts externos.
+
+**Riesgo aceptado y documentado (no es un bug, es una decisión de arquitectura del proyecto)**:
+- Pyodide se carga en runtime desde `cdn.jsdelivr.net` (`python-runner.ts`, versión fijada `v314.0.5`) sin Subresource Integrity — no aplica SRI clásico porque se carga vía `import()` dinámico de un `.mjs`, no un `<script src>` con atributo `integrity`. El riesgo real es bajo (versión fijada e inmutable en jsdelivr, no `latest`), pero si se quiere eliminar la dependencia de un tercero en runtime por completo, la alternativa es auto-hospedar los assets de Pyodide en `public/` y servirlos desde el mismo origen.
+
+**Pendiente de una decisión del usuario (no se pudo resolver sin esa información):**
+- El plugin PWA (`vite-plugin-pwa`) registra un service worker con scope por defecto `/` (no hay `base` configurado en `vite.config.ts`). Si el proyecto se despliega en la **raíz** de un dominio/subdominio propio, esto es correcto y no hay riesgo. Pero si se despliega bajo una **subruta de un dominio institucional compartido** (ej. `tec.mx/alumnos/cienciadatos/`) sin ajustar `base`, el build generaría rutas de assets rotas y, más importante, el service worker generado podría intentar registrarse con un scope más amplio del que le corresponde — hay que preguntarle al usuario dónde exactamente se va a desplegar (raíz propia vs. subruta de un sitio compartido) antes de que sea un problema real, y si es subruta, configurar `base: '/subruta/'` en `vite.config.ts` (esto ajusta automáticamente `start_url`/scope del manifest y del SW vía `vite-plugin-pwa`).
+
+`npm run build` y `npm run lint` pasan sin errores tras los cambios.
+
 #### 1. Proofreading de unidades 4-5 y las 23 prácticas (pendiente #3 de la sesión anterior)
 
 **Revisado**: lecciones 4.1-5.4 línea por línea (teoría, actividades, hints, evaluación) y `practices/index.ts` completo (1306 líneas).

@@ -224,10 +224,13 @@ export function CodeLab({
                 {output.svgOutput && (
                   <div>
                     <p className="text-xs font-medium text-text-secondary mb-1">Gráfica:</p>
-                    <div
-                      className="bg-white rounded-xl p-4 border border-border overflow-x-auto shadow-sm"
-                      dangerouslySetInnerHTML={{ __html: output.svgOutput }}
-                    />
+                    <div className="bg-white rounded-xl p-4 border border-border overflow-x-auto shadow-sm">
+                      <img
+                        src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(output.svgOutput)}`}
+                        alt="Gráfica generada por el código Python"
+                        className="max-w-full h-auto"
+                      />
+                    </div>
                   </div>
                 )}
                 {output.error && (
