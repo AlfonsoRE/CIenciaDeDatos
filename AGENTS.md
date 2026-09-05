@@ -548,3 +548,11 @@ Notas abiertas de bajo impacto, sin trabajo pendiente concreto (solo si se toca 
 
 4. **`useLesson.ts`/`LessonLayout.tsx`**: quedaron simplificados tras eliminar el stepper duplicado (sesión 2026-09-03 #9); si se re-agrega navegación por etapas al header, hacerlo leyendo el estado real de `LessonPlayer` (no el persistido, que no cubre `theory`/`visual`).
 5. `useLesson.ts` ya no expone `mastery`/`completedStages`; si algún componente futuro los necesita, re-derivarlos correctamente en vez de restaurar el código viejo que estaba roto.
+
+Pendiente real, esperando información del usuario (de la auditoría de seguridad, sesión 2026-09-05 — ver esa sección del historial para el detalle completo):
+
+6. **Ruta de despliegue aún no decidida**: el service worker de `vite-plugin-pwa` usa scope `/` por defecto (sin `base` en `vite.config.ts`). Es correcto si el proyecto se despliega en la raíz de un dominio/subdominio propio; si termina siendo una subruta de un dominio institucional compartido (ej. `tec.mx/algo/cienciadatos/`), hay que configurar `base: '/algo/cienciadatos/'` antes de publicarlo — el usuario dijo el 2026-09-05 que todavía no sabe dónde se alojará. Preguntar de nuevo cuando retome el tema del despliegue.
+
+### Sesión 2026-09-05 — cierre
+
+Todos los fixes de hoy fueron verificados en vivo en navegador (no solo `tsc`/`lint`) antes de dar por cerrado cada uno, incluyendo el reportado directamente por el usuario con capturas de pantalla (lección marcada como completada solo al llegar a Feedback, sin depender del botón final — confirmado por el usuario que "ya quedó bien" tras rehacer la lección 1.1). 8 commits en total, todos pusheados a `origin/main`.
