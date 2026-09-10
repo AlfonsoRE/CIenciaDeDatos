@@ -534,6 +534,22 @@ Revisión profesional completa del contenido, la pedagogía y el código (a peti
 
 18. **`resize_window` (herramienta de automatización de navegador) no funciona en este entorno de desarrollo**: reporta éxito pero `window.innerWidth` sigue devolviendo el tamaño real de pantalla (confirmado con `javascript_tool`), por lo que el layout nunca cambia a la vista móvil. Para probar responsive de verdad sin acceso a DevTools manual, inyectar un `<iframe>` con `width`/`height` fijos (ej. 390×844) apuntando a la misma URL vía `javascript_tool` — un iframe sí tiene su propio viewport real y dispara los media queries CSS correctamente. Tomar el screenshot con el tab normal (no `zoom`, que usa un sistema de coordenadas distinto al de la ventana real).
 
+### Sesión 2026-09-10 — preparación para despliegue en hosting gratuito (InfinityFree)
+
+**Objetivo**: generar los archivos estáticos listos para subir a `https://cienciadedatos.infinityfree.me/`.
+
+**Cambios realizados:**
+
+- **`vite.config.ts`**: agregado `base: './'` — todas las rutas en `index.html` y `manifest.webmanifest` ahora son relativas (`./assets/...`, `./icon-192.png`, etc.). El sitio funciona tanto en raíz de dominio como en cualquier subruta sin volver a tocar configuración.
+- **`vite.config.ts`**: corregido el manifest de `VitePWA` — `start_url` y `scope` cambiados de `'/'` a `'./'`, `lang` de `'en'` a `'es'`, iconos de `/icon-*` a `./icon-*`.
+- **`public/.htaccess`**: creado para Apache (InfinityFree usa Apache). Incluye: redirección SPA (`RewriteRule ^ index.html [L]` para rutas como `/curso`, `/laboratorio`), headers de seguridad (`X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, `Referrer-Policy`), caché de assets estáticos (1 año JS/CSS/imágenes), y compresión gzip.
+- **`public/icon-192.png` y `public/icon-512.png`**: generados con script Node (cuadrado azul `#2563EB` sobre fondo blanco) — el manifest los referenciaba pero no existían, causando 404s en la instalación PWA.
+- **Build**: `npm run build` genera `dist/` (~1.57 MB) con 17 archivos, todos con rutas relativas.
+
+**Pendiente resuelto**: la ruta de despliegue (antes pendiente #6 de la sesión 2026-09-05) ahora está decidida — raíz de `cienciadedatos.infinityfree.me`. Con `base: './'` el sitio también funcionaría en una subruta si el hosting cambiara en el futuro.
+
+**Archivos a subir a InfinityFree**: todo el contenido de `dist/` (raíz del sitio).
+
 ## Pendientes para la próxima sesión
 
 Los 3 pendientes identificados en la revisión del 2026-09-03 (auditoría de accesibilidad, responsive/mobile, proofreading de unidades 4-5 y las 23 prácticas) se completaron en la sesión 2026-09-05 — ver el historial de esa sesión arriba para el detalle de cada fix. No quedan pendientes activos de esa revisión.
@@ -551,7 +567,7 @@ Notas abiertas de bajo impacto, sin trabajo pendiente concreto (solo si se toca 
 
 Pendiente real, esperando información del usuario (de la auditoría de seguridad, sesión 2026-09-05 — ver esa sección del historial para el detalle completo):
 
-6. **Ruta de despliegue aún no decidida**: el service worker de `vite-plugin-pwa` usa scope `/` por defecto (sin `base` en `vite.config.ts`). Es correcto si el proyecto se despliega en la raíz de un dominio/subdominio propio; si termina siendo una subruta de un dominio institucional compartido (ej. `tec.mx/algo/cienciadatos/`), hay que configurar `base: '/algo/cienciadatos/'` antes de publicarlo — el usuario dijo el 2026-09-05 que todavía no sabe dónde se alojará. Preguntar de nuevo cuando retome el tema del despliegue.
+6. ~~**Ruta de despliegue aún no decidida**~~ — **Resuelta** en sesión 2026-09-10: raíz de `cienciadedatos.infinityfree.me`. `base: './'` configurado en `vite.config.ts`, `.htaccess` creado para SPA routing en Apache.
 
 ### Sesión 2026-09-05 — cierre
 
